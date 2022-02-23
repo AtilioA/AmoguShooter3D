@@ -19,9 +19,11 @@ void parseCircle(XMLElement *circ, Game *game)
     circ->QueryFloatAttribute("r", &r);
     string circFill = circ->Attribute("fill");
 
-    Point center = {cx, cy};
+    GLdouble cz = game->get_random_z_inside_arena_given_radius(r);
 
-    cout << "cx: " << cx << " cy: " << cy << " r: " << r << " circFill: " << circFill << endl;
+    Point center = {cx, cy, cz};
+
+    cout << "cx: " << cx << " cy: " << cy << " random z: " << cz << " r: " << r << " circFill: " << circFill << endl;
 
     // Enemy circle
     if (circFill == "red")

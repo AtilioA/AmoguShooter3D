@@ -3,6 +3,20 @@
 
 using namespace std;
 
+GLdouble Game::get_random_z_inside_arena_given_radius(GLfloat radius)
+{
+    GLfloat arenaLength = this->background->get_length();
+    Point arenaPos = this->background->get_center();
+
+    GLdouble initialZ = arenaPos.z + radius;
+    GLdouble finalZ = arenaPos.z + arenaLength - radius;
+
+    // Generate a random z position between the initial and final z position
+    GLdouble randomZ = initialZ + (finalZ - initialZ) * (rand() / (RAND_MAX + 1.0));
+
+    return randomZ;
+}
+
 void Game::make_a_character_shoot(Character *character)
 {
     // Check if Character can shoot (based on their reload time and the time since the last shot)

@@ -87,6 +87,7 @@ public:
     bool is_character_outside_arena(Character *character);
     bool is_character_inside_any_terrain(Character *character);
     bool will_enemy_fall(Enemy *enemy, GLdouble dx, GLfloat frameTime);
+    GLdouble get_random_z_inside_arena_given_radius(GLfloat radius);
     /* Gunshot collision interface */
     void handle_collision_gunshot(Gunshot *gunshot);
     bool check_collision_gunshot_non_character(Gunshot *gunshot);

@@ -68,6 +68,11 @@ GLfloat Terrain::get_height()
     return this->height;
 }
 
+GLfloat Terrain::get_length()
+{
+    return this->length;
+}
+
 void Terrain::set_color(Color c)
 {
     this->color = c;
