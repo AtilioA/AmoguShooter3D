@@ -141,6 +141,10 @@ void key_press(unsigned char key, int x, int y)
             game->get_debug_options().drawCharacterHitbox ? game->set_debug_options(false) : game->set_debug_options(true);
         }
         break;
+    case ' ':
+        keyStatus[(int)(' ')] = 1;
+        break;
+
     // Quit game
     case 27: // Escape key
         exit(0);
@@ -177,25 +181,6 @@ void mouse_click(int button, int state, int mousex, int mousey)
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
         game->make_a_character_shoot(game->get_player());
-    }
-
-    // Player jump on right click
-    Player *player = game->get_player();
-    if (button == GLUT_RIGHT_BUTTON)
-    {
-        if (state == GLUT_DOWN)
-        {
-            if (player->get_can_jump() || player->get_is_jumping())
-            {
-                player->set_jump_initial_y(player->get_center().y);
-                player->set_is_jumping(true);
-            }
-        }
-        else
-        {
-            player->set_is_jumping(false);
-            player->set_is_falling(true);
-        }
     }
 
     // Redraw the scene (maybe unnecessary)
@@ -308,6 +293,22 @@ void idle(void)
 
         GLdouble inc = player->get_speed();
         GLdouble dx = 0, dy = 0;
+
+        if (keyStatus[(int)(' ')] == 1)
+        {
+            // Player jump on spacebar press
+            if (player->get_can_jump() || player->get_is_jumping())
+            {
+                // FIXME: Only set initial y once per jump
+                player->set_jump_initial_y(player->get_center().y);
+                player->set_is_jumping(true);
+            }
+        }
+        else
+        {
+            player->set_is_jumping(false);
+            player->set_is_falling(true);
+        }
 
         // Continue player jump if they're jumping but not falling
         if (player->get_is_jumping() && !player->get_is_falling())

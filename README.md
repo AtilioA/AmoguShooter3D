@@ -4,7 +4,7 @@
 
 ## Usage
 
-To run the game, you'll need to install freeGLUT dependencies:
+To run the game, you'll need to install FreeGLUT dependencies:
 
 ### Prerequisites
 
