@@ -59,12 +59,20 @@ void parseRect(XMLElement *rect, Game *game)
 
     cout << "x: " << x << " y: " << y << " width: " << width << " height: " << height << " rectFill: " << rectFill << endl;
 
+    // STUB: this hack fixes the case when the height isn't defined yet or is 0
+    GLfloat length = game->get_arena_dimensions().height / 2;
+    if (length == 0)
+    {
+        // We might be able to assume that the blue rectangle is always the first rectangle
+        length = height / 2;
+    }
+
     // Terrain rectangle
     if (rectFill == "black")
     {
         cout << "-- TERRAIN --" << endl;
         color = {0.0, 0.0, 0.0};
-        Terrain *terrain = new Terrain(center, width, height, color);
+        Terrain *terrain = new Terrain(center, width, height, length, color);
         terrain->draw_terrain();
         game->add_terrain(terrain);
     }
@@ -74,12 +82,14 @@ void parseRect(XMLElement *rect, Game *game)
         cout << "-- BACKGROUND --" << endl;
         color = {0.0, 0.0, 0.75};
 
-        Terrain *background = new Terrain(center, width, height, color);
+        Terrain *background = new Terrain(center, width, height, length, color);
         Dimensions dimensions = {width, height};
         // Disclaimer: arena_background and arena_dimensions are a bit redundant
         game->set_arena_background(background);
         game->set_arena_dimensions(dimensions);
     }
+
+    // cout << "length: " << length << endl;
 }
 
 void parseSVGFile(string filepath, Game *game)

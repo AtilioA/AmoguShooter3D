@@ -17,11 +17,12 @@ private:
     GLfloat length;
 
 public:
-    Terrain(Point center, GLfloat width, GLfloat height, Color color)
+    Terrain(Point center, GLfloat width, GLfloat height, GLfloat length, Color color)
     {
         this->center = center;
         this->width = width;
         this->height = height;
+        this->length = length;
         this->color = color;
     }
 
