@@ -26,6 +26,7 @@ typedef struct tPoint
 {
     GLdouble x;
     GLdouble y;
+    GLdouble z;
 } Point;
 
 // Stores the RGB values of a color

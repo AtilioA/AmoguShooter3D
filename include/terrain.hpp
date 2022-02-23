@@ -14,6 +14,7 @@ private:
     Color color;
     GLfloat width;
     GLfloat height;
+    GLfloat length;
 
 public:
     Terrain(Point center, GLfloat width, GLfloat height, Color color)
@@ -32,6 +33,7 @@ public:
     Color get_color();
     GLfloat get_width();
     GLfloat get_height();
+    GLfloat get_length();
 
     void set_color(Color c);
 };
