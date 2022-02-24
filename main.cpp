@@ -69,7 +69,14 @@ void RenderString(float x, float y)
 void render_scene()
 {
     // Clear the screen.
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    // gluLookAt(0, 2, 5, 0, 0, 0, 0, 1, 0);
+
+    GLfloat lightParams[] = {0.0, 3.0, 10.0, 1.0};
+    glLightfv(GL_LIGHT0, GL_POSITION, lightParams);
 
     // Only draw the game components if the game is not over
     if (game->has_game_reached_end_state())
@@ -294,29 +301,36 @@ void idle(void)
         GLdouble inc = player->get_speed();
         GLdouble dx = 0, dy = 0;
 
+        // cout << "Can jump: " << player->get_can_jump() << endl;
+        // cout << "Is jumping: " << player->get_is_jumping() << endl;
+        // cout << "Is falling: " << player->get_is_falling() << endl;
+
+        /* Make Player jump */
         if (keyStatus[(int)(' ')] == 1)
         {
-            // Player jump on spacebar press
-            if (player->get_can_jump() || player->get_is_jumping())
+            // Jump initialization
+            if (player->get_can_jump() && !player->get_is_jumping())
             {
-                // FIXME: Only set initial y once per jump
+                // cout << "Setting initial y:" << player->get_center().y << endl;
                 player->set_jump_initial_y(player->get_center().y);
+
                 player->set_is_jumping(true);
+                player->set_can_jump(false);
+            }
+
+            // Player continue jumping when holding spacebar
+            if (player->get_is_jumping() && !player->get_is_falling())
+            {
+                game->make_a_character_jump(player, frameTime);
             }
         }
-        else
+        else // Not pressing spacebar
         {
             player->set_is_jumping(false);
             player->set_is_falling(true);
         }
 
-        // Continue player jump if they're jumping but not falling
-        if (player->get_is_jumping() && !player->get_is_falling())
-        {
-            game->make_a_character_jump(player, frameTime);
-        }
-
-        /* Make character move */
+        /* Make Player move */
         if (keyStatus['d'] == 1 || keyStatus['D'] == 1)
         {
             dx += inc;

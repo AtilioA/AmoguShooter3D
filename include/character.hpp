@@ -45,9 +45,10 @@ protected:
     bool isWalkingObserve;
 
     /* Jumping */
-    bool isFalling;
-    bool isJumping;
+    // Three booleans is certainly redundancy, but it's easier to think through
     bool canJump;
+    bool isJumping;
+    bool isFalling;
     GLfloat jumpTime;
     GLfloat jumpSpeed;
     GLfloat jumpInitialY;

@@ -53,8 +53,8 @@ void Game::make_a_character_jump(Character *character, GLfloat frameTime)
     }
     else
     {
+        character->set_can_jump(false);
         character->set_is_jumping(false);
-        character->set_can_jump(true);
         character->set_is_falling(true);
     }
 }
@@ -469,7 +469,7 @@ bool Game::is_character_outside_arena(Character *character)
             character->set_can_jump(true);
         }
 
-        if (character->get_center().y <= arenaPos.y)
+        if (character->get_center().y - character->get_height() <= arenaPos.y)
         {
             // Player collided with the top of the arena and should stop jumping
             character->set_is_falling(true);
