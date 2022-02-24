@@ -76,16 +76,16 @@ void parseRect(XMLElement *rect, Game *game)
         terrain->draw_terrain();
         game->add_terrain(terrain);
     }
-    // Background rectangle
+    // Arena rectangle
     else if (rectFill == "blue")
     {
-        cout << "-- BACKGROUND --" << endl;
+        cout << "-- ARENA --" << endl;
         color = {0.0, 0.0, 0.75};
 
-        Terrain *background = new Terrain(center, width, height, length, color);
+        Terrain *arena = new Terrain(center, width, height, length, color);
         Dimensions dimensions = {width, height};
-        // Disclaimer: arena_background and arena_dimensions are a bit redundant
-        game->set_arena_background(background);
+        // Disclaimer: arena and arena_dimensions are a bit redundant
+        game->set_arena(arena);
         game->set_arena_dimensions(dimensions);
     }
 

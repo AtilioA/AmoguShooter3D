@@ -5,8 +5,8 @@ using namespace std;
 
 GLdouble Game::get_random_z_inside_arena_given_radius(GLfloat radius)
 {
-    GLfloat arenaLength = this->background->get_length();
-    Point arenaPos = this->background->get_center();
+    GLfloat arenaLength = this->arena->get_length();
+    Point arenaPos = this->arena->get_center();
 
     GLdouble initialZ = arenaPos.z + radius;
     GLdouble finalZ = arenaPos.z + arenaLength - radius;
@@ -61,7 +61,7 @@ void Game::make_a_character_jump(Character *character, GLfloat frameTime)
 
 bool Game::has_player_reached_arena_end()
 {
-    return this->player->get_center().x + (this->player->get_trunk_width() * 1.2) / 2 >= this->background->get_center().x + this->background->get_width();
+    return this->player->get_center().x + (this->player->get_trunk_width() * 1.2) / 2 >= this->arena->get_center().x + this->arena->get_width();
 }
 
 bool Game::has_player_won()
@@ -206,8 +206,8 @@ bool Game::check_collision_gunshot_non_character(Gunshot *gunshot)
 
 bool Game::is_gunshot_outside_arena(Gunshot *gunshot)
 {
-    Terrain *arenaTerrain = this->background;
-    Point arenaPos = this->background->get_center();
+    Terrain *arenaTerrain = this->arena;
+    Point arenaPos = this->arena->get_center();
 
     if (gunshot->get_center().y - gunshot->get_radius() < arenaPos.y ||
         gunshot->get_center().y + gunshot->get_radius() > arenaPos.y + arenaTerrain->get_height())
@@ -350,7 +350,7 @@ void Game::move_enemy_randomly(Enemy *enemy, GLfloat frameTime)
 
 void Game::enemy_shoot_at_player(Enemy *enemy, GLfloat frameTime)
 {
-    GLdouble enemyXViewDistance = this->get_arena_background()->get_height() * 0.4;
+    GLdouble enemyXViewDistance = this->get_arena()->get_height() * 0.4;
     GLdouble enemyYViewDistance = enemy->get_height() * 3;
 
     if (enemy->get_center().x - enemyXViewDistance < this->player->get_center().x &&
@@ -442,7 +442,7 @@ void Game::free()
     this->enemies.clear();
     this->terrains.clear();
 
-    delete this->background;
+    delete this->arena;
 }
 
 void Game::reset_game()
@@ -454,8 +454,8 @@ void Game::reset_game()
 
 bool Game::is_character_outside_arena(Character *character)
 {
-    Terrain *arenaTerrain = this->background;
-    Point arenaPos = this->background->get_center();
+    Terrain *arenaTerrain = this->arena;
+    Point arenaPos = this->arena->get_center();
 
     // Check if player is outside the arena vertically
     if (character->get_center().y - character->get_radius() < arenaPos.y ||
@@ -482,7 +482,7 @@ bool Game::is_character_outside_arena(Character *character)
     // Player collided with bottom of the arena and should mark it as the terrain 'below'
     if (character->get_center().y + character->get_radius() > arenaPos.y + arenaTerrain->get_height())
     {
-        character->set_terrain_below(this->get_arena_background());
+        character->set_terrain_below(this->get_arena());
     }
 
     // Check if player is outside the arena horizontally
@@ -591,14 +591,14 @@ void Game::draw_player()
     this->player->draw_character();
 }
 
-void Game::set_arena_background(Terrain *background)
+void Game::set_arena(Terrain *arena)
 {
-    this->background = background;
+    this->arena = arena;
 }
 
-Terrain *Game::get_arena_background()
+Terrain *Game::get_arena()
 {
-    return this->background;
+    return this->arena;
 }
 
 GLint Game::get_n_characters()

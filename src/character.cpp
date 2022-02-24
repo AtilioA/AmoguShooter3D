@@ -366,7 +366,7 @@ bool Character::is_inside_terrain(Terrain *terrain)
     {
         if (this->center.x + this->trunkWidth / 2 >= terrainPos.x && this->center.x - this->trunkWidth / 2 <= terrainPos.x + terrain->get_width())
         {
-            // Collided with black Terrain (not arena background) from above (make Character able to jump)
+            // Collided with black Terrain (not arena Terrain) from above (make Character able to jump)
             if (terrain->get_color().b != 1.0 && this->center.y <= terrainPos.y)
             {
                 this->isFalling = false;
