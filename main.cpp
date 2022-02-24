@@ -54,7 +54,7 @@ void RenderString(float x, float y)
     }
 
     // Raster position for the text, determined by the player's position
-    glRasterPos2f(game->get_player()->get_center().x - stringMargin, -game->get_arena_background()->get_center().y - game->get_arena_background()->get_height() / 2);
+    glRasterPos2f(game->get_player()->get_center().x - stringMargin, -game->get_arena()->get_center().y - game->get_arena()->get_height() / 2);
 
     // Navigate through the string and display each character
     char *text;
@@ -87,8 +87,8 @@ void render_scene()
     else
     {
         // cout << "\nDrawing game elements:" << endl;
-        // cout << "Drawing background... ";
-        game->get_arena_background()->draw_terrain();
+        // cout << "Drawing arena... ";
+        game->get_arena()->draw_terrain();
         // cout << "Drawing terrains... ";
         game->draw_terrains();
         // cout << "Drawing player... ";
@@ -243,13 +243,13 @@ void idle(void)
     {
         glMatrixMode(GL_PROJECTION); // Select the projection matrix
         glLoadIdentity();
-        glOrtho(-game->get_arena_background()->get_height() / 2 + player->get_center().x,                     // X coordinate of left edge
-                game->get_arena_background()->get_height() / 2 + player->get_center().x,                      // X coordinate of right edge
-                (-game->get_arena_background()->get_center().y - game->get_arena_background()->get_height()), // Y coordinate of bottom edge
-                -game->get_arena_background()->get_center().y,                                                // Y coordinate of top edge
-                -1,                                                                                           // Z coordinate of the “near” plane
-                1);                                                                                           // Z coordinate of the “far” plane
-        glMatrixMode(GL_MODELVIEW);                                                                           // Select the projection matrix
+        glOrtho(-game->get_arena()->get_height() / 2 + player->get_center().x,          // X coordinate of left edge
+                game->get_arena()->get_height() / 2 + player->get_center().x,           // X coordinate of right edge
+                (-game->get_arena()->get_center().y - game->get_arena()->get_height()), // Y coordinate of bottom edge
+                -game->get_arena()->get_center().y,                                     // Y coordinate of top edge
+                -1,                                                                     // Z coordinate of the “near” plane
+                1);                                                                     // Z coordinate of the “far” plane
+        glMatrixMode(GL_MODELVIEW);                                                     // Select the projection matrix
     }
     else // if global camera is enabled
     {

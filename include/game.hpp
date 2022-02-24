@@ -29,7 +29,7 @@ private:
     vector<Enemy *> enemies;
     vector<Gunshot *> charactersGunshots;
     vector<Terrain *> terrains;
-    Terrain *background;
+    Terrain *arena;
     GLint nCharacters;
     string arenaSVGFilename;
     Dimensions arenaDimensions;
@@ -42,7 +42,7 @@ public:
         this->player = NULL;
         this->enemies = vector<Enemy *>();
         this->terrains = vector<Terrain *>();
-        this->background = NULL;
+        this->arena = NULL;
         this->nCharacters = 0;
         this->arenaSVGFilename = "";
         this->arenaDimensions = {0, 0};
@@ -109,8 +109,8 @@ public:
     void draw_terrains();
 
     /* Arena interface */
-    void set_arena_background(Terrain *background);
-    Terrain *get_arena_background();
+    void set_arena(Terrain *arena);
+    Terrain *get_arena();
     void set_arena_svg_filename(string arenaSVGFilename);
     string get_arena_svg_filename();
     void set_arena_dimensions(Dimensions arenaDimensions);
