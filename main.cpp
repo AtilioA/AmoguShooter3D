@@ -293,10 +293,10 @@ void idle(void)
         {
             // Update enemies positions by moving them randomly
             game->move_enemies_randomly(frameTime);
-        }
 
-        // Make enemies shoot at player if they are in range
-        game->enemies_shoot_at_player(frameTime);
+            // Make enemies shoot at player if they are in range
+            game->enemies_shoot_at_player(frameTime);
+        }
 
         GLdouble inc = player->get_speed();
         GLdouble dx = 0, dy = 0;
@@ -388,7 +388,8 @@ int main(int argc, char *argv[])
     // Initialize openGL with Double buffer and RGB color without transparency
     // Its interesting to try GLUT_SINGLE instead of GLUT_DOUBLE
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
     // Create the window
     glutInitWindowSize(Width, Height);
