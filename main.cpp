@@ -16,6 +16,25 @@ int keyStatus[256];
 // Char array for endgame messages
 static char str[999];
 
+// Identificadores de textura
+GLuint textureEarth;
+GLuint textureSun;
+GLuint texturePlane;
+
+// Cotroles de giro
+double angleDay = 0;
+double angleYear = 0;
+
+// Camera controls
+double camDist = 50;
+double camXYAngle = 0;
+double camXZAngle = 0;
+int toggleCam = 0;
+int camAngle = 60;
+int lastX = 0;
+int lastY = 0;
+int buttonDown = 0;
+
 /* Window dimensions */
 // "será exibida em uma janela de 500x500 pixel do sistema operacional"
 const GLint Width = 500;
@@ -66,6 +85,18 @@ void RenderString(float x, float y)
     }
 }
 
+void change_camera(int angle, int w, int h)
+{
+    glMatrixMode(GL_PROJECTION);
+
+    glLoadIdentity();
+
+    gluPerspective(angle,
+                   (GLfloat)w / (GLfloat)h, 1, 150.0);
+
+    glMatrixMode(GL_MODELVIEW);
+}
+
 void render_scene()
 {
     // Clear the screen.
@@ -112,6 +143,10 @@ void render_scene()
 // Function called whenever a key is pressed; all shortcuts are handled by the switch statement
 void key_press(unsigned char key, int x, int y)
 {
+    static bool textureEnabled = true;
+    static bool lightingEnabled = true;
+    static bool smoothEnabled = true;
+
     switch (key)
     {
     // Enable 'global camera' (buggy but only exists for debugging purposes)
@@ -148,6 +183,62 @@ void key_press(unsigned char key, int x, int y)
             game->get_debug_options().drawCharacterHitbox ? game->set_debug_options(false) : game->set_debug_options(true);
         }
         break;
+    case '3':
+        toggleCam = 0;
+        break;
+    case '4':
+        toggleCam = 1;
+        break;
+    case 't':
+        if (textureEnabled)
+        {
+            glDisable(GL_TEXTURE_2D);
+        }
+        else
+        {
+            glEnable(GL_TEXTURE_2D);
+        }
+        textureEnabled = !textureEnabled;
+        break;
+    case 'l':
+        if (lightingEnabled)
+        {
+            glDisable(GL_LIGHTING);
+        }
+        else
+        {
+            glEnable(GL_LIGHTING);
+        }
+        lightingEnabled = !lightingEnabled;
+        break;
+    case 's':
+        if (smoothEnabled)
+        {
+            glShadeModel(GL_FLAT);
+        }
+        else
+        {
+            glShadeModel(GL_SMOOTH);
+        }
+        smoothEnabled = !smoothEnabled;
+        break;
+    case '+':
+    {
+        int inc = camAngle >= 180 ? 0 : 1;
+        camAngle += inc;
+        change_camera(camAngle,
+                      glutGet(GLUT_WINDOW_WIDTH),
+                      glutGet(GLUT_WINDOW_HEIGHT));
+        break;
+    }
+    case '-':
+    {
+        int inc = camAngle <= 5 ? 0 : 1;
+        camAngle -= inc;
+        change_camera(camAngle, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+        break;
+    }
+    break;
     case ' ':
         keyStatus[(int)(' ')] = 1;
         break;
@@ -159,6 +250,13 @@ void key_press(unsigned char key, int x, int y)
 
     // Redraw the scene (maybe unnecessary)
     glutPostRedisplay();
+}
+
+void reshape(int w, int h)
+{
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+
+    change_camera(camAngle, w, h);
 }
 
 // Handle key release
@@ -196,6 +294,12 @@ void mouse_click(int button, int state, int mousex, int mousey)
 
 void init(Game *game)
 {
+    glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
+    glShadeModel(GL_SMOOTH);
+    glDepthFunc(GL_LEQUAL);
+
     // Initialize all keys to 'up'
     ResetKeyStatus();
 
@@ -209,12 +313,12 @@ void init(Game *game)
     // Use ViewingHeight and ViewingWidth to create the default camera
     glMatrixMode(GL_PROJECTION); // Select the projection matrix
     glLoadIdentity();
-    glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
-            (ViewingWidth / 2),   // X coordinate of right edge
-            -(ViewingHeight / 2), // Y coordinate of bottom edge
-            (ViewingHeight / 2),  // Y coordinate of top edge
-            -100,                 // Z coordinate of the “near” plane
-            100);                 // Z coordinate of the “far” plane
+    // glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
+    //         (ViewingWidth / 2),   // X coordinate of right edge
+    //         -(ViewingHeight / 2), // Y coordinate of bottom edge
+    //         (ViewingHeight / 2),  // Y coordinate of top edge
+    //         -100,                 // Z coordinate of the “near” plane
+    //         100);                 // Z coordinate of the “far” plane
 
     glMatrixMode(GL_MODELVIEW); // Select the projection matrix
     glLoadIdentity();
@@ -241,30 +345,33 @@ void idle(void)
     // The camera shouldn't move in y direction, only in x
     if (!game->get_debug_options().globalCamera)
     {
-        glMatrixMode(GL_PROJECTION); // Select the projection matrix
+        // glMatrixMode(GL_PROJECTION); // Select the projection matrix
+        // glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glOrtho(-game->get_arena()->get_height() / 2 + player->get_center().x,          // X coordinate of left edge
-                game->get_arena()->get_height() / 2 + player->get_center().x,           // X coordinate of right edge
-                (-game->get_arena()->get_center().y - game->get_arena()->get_height()), // Y coordinate of bottom edge
-                -game->get_arena()->get_center().y,                                     // Y coordinate of top edge
-                -1,                                                                     // Z coordinate of the “near” plane
-                1);                                                                     // Z coordinate of the “far” plane
-        glMatrixMode(GL_MODELVIEW);                                                     // Select the projection matrix
+        gluLookAt(0, 2, 5, player->get_center().x, player->get_center().y, player->get_center().z, 0, 1, 0);
+        // glOrtho(-game->get_arena()->get_height() / 2 + player->get_center().x,          // X coordinate of left edge
+        //         game->get_arena()->get_height() / 2 + player->get_center().x,           // X coordinate of right edge
+        //         (-game->get_arena()->get_center().y - game->get_arena()->get_height()), // Y coordinate of bottom edge
+        //         -game->get_arena()->get_center().y,                                     // Y coordinate of top edge
+        //         -1,                                                                     // Z coordinate of the “near” plane
+        //         1);                                                                     // Z coordinate of the “far” plane
+        // glMatrixMode(GL_MODELVIEW); // Select the projection matrix
     }
-    else // if global camera is enabled
-    {
-        glMatrixMode(GL_PROJECTION); // Select the projection matrix
-        glLoadIdentity();
-        glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
-                (ViewingWidth / 2),   // X coordinate of right edge
-                -(ViewingHeight / 2), // Y coordinate of bottom edge
-                (ViewingHeight / 2),  // Y coordinate of top edge
-                -100,                 // Z coordinate of the “near” plane
-                100);                 // Z coordinate of the “far” plane
+    // else // if global camera is enabled
+    // {
+    //     glMatrixMode(GL_PROJECTION); // Select the projection matrix
+    //     glLoadIdentity();
+    //     glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
+    //             (ViewingWidth / 2),   // X coordinate of right edge
+    //             -(ViewingHeight / 2), // Y coordinate of bottom edge
+    //             (ViewingHeight / 2),  // Y coordinate of top edge
+    //             -100,                 // Z coordinate of the “near” plane
+    //             100);                 // Z coordinate of the “far” plane
 
-        glMatrixMode(GL_MODELVIEW); // Select the projection matrix
-        glLoadIdentity();
-    }
+    //     glMatrixMode(GL_MODELVIEW); // Select the projection matrix
+    //     glLoadIdentity();
+    // }
 
     // If player has reached the end of the level or has died, stop the game
     if (game->has_game_reached_end_state())
@@ -398,6 +505,7 @@ int main(int argc, char *argv[])
 
     /* Define callbacks */
     glutDisplayFunc(render_scene);
+    glutReshapeFunc(reshape);
     glutKeyboardFunc(key_press);
     glutKeyboardUpFunc(key_up);
     // Mouse events handlers
