@@ -30,7 +30,7 @@ double camDist = 50;
 double camXYAngle = 0;
 double camXZAngle = 0;
 int toggleCam = 0;
-int camAngle = 60;
+int camAngle = 170;
 int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
@@ -104,7 +104,7 @@ void render_scene()
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    // gluLookAt(0, 2, 5, 0, 0, 0, 0, 1, 0);
+    gluLookAt(game->get_player()->get_center().x,game->get_player()->get_center().y,game->get_player()->get_center().z +5, game->get_player()->get_center().x,game->get_player()->get_center().y,game->get_player()->get_center().z, 0,1,0);
 
     GLfloat lightParams[] = {0.0, 3.0, 10.0, 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, lightParams);
@@ -294,11 +294,11 @@ void mouse_click(int button, int state, int mousex, int mousey)
 
 void init(Game *game)
 {
-    glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_DEPTH_TEST);
     // glEnable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
-    glShadeModel(GL_SMOOTH);
-    glDepthFunc(GL_LEQUAL);
+    // glEnable(GL_LIGHTING);
+    // glShadeModel(GL_SMOOTH);
+    // glDepthFunc(GL_LEQUAL);
 
     // Initialize all keys to 'up'
     ResetKeyStatus();
@@ -311,8 +311,8 @@ void init(Game *game)
     cout << "Smallest arena dimension: " << smallestArenaDimension << endl;
 
     // Use ViewingHeight and ViewingWidth to create the default camera
-    glMatrixMode(GL_PROJECTION); // Select the projection matrix
-    glLoadIdentity();
+    // glMatrixMode(GL_PROJECTION); // Select the projection matrix
+    // glLoadIdentity();
     // glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
     //         (ViewingWidth / 2),   // X coordinate of right edge
     //         -(ViewingHeight / 2), // Y coordinate of bottom edge
@@ -320,8 +320,8 @@ void init(Game *game)
     //         -100,                 // Z coordinate of the “near” plane
     //         100);                 // Z coordinate of the “far” plane
 
-    glMatrixMode(GL_MODELVIEW); // Select the projection matrix
-    glLoadIdentity();
+    // glMatrixMode(GL_MODELVIEW); // Select the projection matrix
+    // glLoadIdentity();
 }
 
 void idle(void)
@@ -347,9 +347,9 @@ void idle(void)
     {
         // glMatrixMode(GL_PROJECTION); // Select the projection matrix
         // glLoadIdentity();
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        gluLookAt(0, 2, 5, player->get_center().x, player->get_center().y, player->get_center().z, 0, 1, 0);
+        // glMatrixMode(GL_MODELVIEW);
+        // glLoadIdentity();
+        // gluLookAt(0, 2, 5, player->get_center().x, player->get_center().y, player->get_center().z, 0, 1, 0);
         // glOrtho(-game->get_arena()->get_height() / 2 + player->get_center().x,          // X coordinate of left edge
         //         game->get_arena()->get_height() / 2 + player->get_center().x,           // X coordinate of right edge
         //         (-game->get_arena()->get_center().y - game->get_arena()->get_height()), // Y coordinate of bottom edge
