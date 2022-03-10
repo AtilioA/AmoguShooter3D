@@ -63,7 +63,7 @@ void Character::move_arm_mouse_helper(GLfloat yMouse, GLfloat *oldY)
 void Character::draw_head()
 {
     glColor3f(this->visorColor.r, this->visorColor.g, this->visorColor.b);
-
+    
     if (this->facingDirection == Direction::RIGHT)
     {
         glBegin(GL_POLYGON);
@@ -91,14 +91,25 @@ void Character::draw_head()
 void Character::draw_body()
 {
     glColor3f(this->colors.upperBody.r, this->colors.upperBody.g, this->colors.upperBody.b);
-    glBegin(GL_POLYGON);
-    // clang-format off
-        glVertex2f(-this->trunkWidth / 2, 0);
-        glVertex2f(this->trunkWidth / 2, 0);
-        glVertex2f(this->trunkWidth / 2, this->height / 8 * 5);
-        glVertex2f(-this->trunkWidth / 2, this->height / 8 * 5);
-    // clang-format on
-    glEnd();
+    GLfloat materialEmission[] = { 0.00, 0.00, 0.00, 1.0};
+    GLfloat materialColor[] = { 1.0, 1.0, 0.0, 1.0};
+    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0};
+    GLfloat mat_shininess[] = { 128 };    
+    glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, materialColor);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, materialColor);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);    
+    glutSolidCube(this->trunkWidth);
+
+    // glBegin(GL_POLYGON);
+    // // clang-format off
+    //     glVertex2f(-this->trunkWidth / 2, 0);
+    //     glVertex2f(this->trunkWidth / 2, 0);
+    //     glVertex2f(this->trunkWidth / 2, this->height / 8 * 5);
+    //     glVertex2f(-this->trunkWidth / 2, this->height / 8 * 5);
+    // // clang-format on
+    // glEnd();
 }
 
 // 4/8 / 2
