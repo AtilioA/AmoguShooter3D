@@ -63,7 +63,7 @@ void Character::move_arm_mouse_helper(GLfloat yMouse, GLfloat *oldY)
 void Character::draw_head()
 {
     glColor3f(this->visorColor.r, this->visorColor.g, this->visorColor.b);
-    
+
     if (this->facingDirection == Direction::RIGHT)
     {
         glBegin(GL_POLYGON);
@@ -91,15 +91,15 @@ void Character::draw_head()
 void Character::draw_body()
 {
     glColor3f(this->colors.upperBody.r, this->colors.upperBody.g, this->colors.upperBody.b);
-    GLfloat materialEmission[] = { 0.00, 0.00, 0.00, 1.0};
-    GLfloat materialColor[] = { 1.0, 1.0, 0.0, 1.0};
-    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0};
-    GLfloat mat_shininess[] = { 128 };    
+    GLfloat materialEmission[] = {0.00, 0.00, 0.00, 1.0};
+    GLfloat materialColor[] = {1.0, 1.0, 0.0, 1.0};
+    GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat mat_shininess[] = {128};
     glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
     glMaterialfv(GL_FRONT, GL_AMBIENT, materialColor);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, materialColor);
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);    
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
     glutSolidCube(this->trunkWidth);
 
     // glBegin(GL_POLYGON);
@@ -224,7 +224,7 @@ void Character::draw_arm()
 {
     glColor3f(this->colors.lowerBody.r * 0.5, this->colors.lowerBody.g * 0.5, this->colors.lowerBody.b * 0.5);
 
-    glTranslatef(this->center.x, -this->center.y, 0);
+    glTranslatef(this->center.x, -this->center.y, -this->center.z);
 
     // Rotate with gThetaArm
     glRotatef(this->gThetaArm, 0, 0, 1);
@@ -247,7 +247,8 @@ void Character::draw_character()
     glPushMatrix();
 
     // Move to the center of the character (remember that the coordinate starts from the top left corner)
-    glTranslatef(this->center.x, -this->center.y, 0);
+    cout << "Character z position: " << this->center.z << endl;
+    glTranslatef(this->center.x, -this->center.y, -this->center.z);
 
     // Left leg
     glPushMatrix();
@@ -291,7 +292,7 @@ void Character::draw_character()
     {
         // Draw dot at the center of the Character
         glPushMatrix();
-        glTranslatef(this->center.x, -this->center.y, 0);
+        glTranslatef(this->center.x, -this->center.y, -this->center.z);
         glPointSize(4);
         glColor3f(0.0, 0.0, 0.0);
         glBegin(GL_POINTS);
@@ -301,7 +302,7 @@ void Character::draw_character()
 
         // Also draw dot at the height
         glPushMatrix();
-        glTranslatef(this->center.x, -this->center.y - this->radius, 0);
+        glTranslatef(this->center.x, -this->center.y - this->radius, -this->center.z);
         glTranslatef(0, this->height, 0);
         glPointSize(4);
         glColor3f(1.0, 1.0, 1.0);
@@ -315,7 +316,7 @@ void Character::draw_character()
     if (game->get_debug_options().drawCharacterHitbox)
     {
         glPushMatrix();
-        glTranslatef(this->center.x, -this->center.y - this->radius, 0);
+        glTranslatef(this->center.x, -this->center.y - this->radius, -this->center.z);
         glColor3f(1.0, 0.0, 0.0);
         glBegin(GL_LINE_LOOP);
         glVertex2f(0, 0);
