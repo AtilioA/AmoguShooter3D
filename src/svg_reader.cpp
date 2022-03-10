@@ -65,6 +65,7 @@ void parse_rect(XMLElement *rect, Game *game)
     {
         // We might be able to assume that the blue rectangle is always the first rectangle
         length = height / 2;
+        cout << "\nThe arena's height is " << height << ", so we must define the arena's length as " << length << "." << endl;
     }
 
     // Terrain rectangle

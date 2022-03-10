@@ -352,8 +352,8 @@ void init(Game *game)
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // Dark gray, no opacity(alpha).
 
     cout << "\nArena width: " << game->get_arena_dimensions().width << ", height: " << game->get_arena_dimensions().height << endl;
-    GLfloat smallestArenaDimension = smallest_dimension(game->get_arena_dimensions());
-    cout << "Smallest arena dimension: " << smallestArenaDimension << endl;
+    // GLfloat smallestArenaDimension = smallest_dimension(game->get_arena_dimensions());
+    // cout << "Smallest arena dimension: " << smallestArenaDimension << endl;
 
     // Use ViewingHeight and ViewingWidth to create the default camera
     // glMatrixMode(GL_PROJECTION); // Select the projection matrix
