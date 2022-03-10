@@ -20,6 +20,7 @@ void parseCircle(XMLElement *circ, Game *game)
     string circFill = circ->Attribute("fill");
 
     GLdouble cz = game->get_random_z_inside_arena_given_radius(r);
+    cz = 40;
 
     Point center = {cx, cy, cz};
 

@@ -30,7 +30,7 @@ double camDist = 50;
 double camXYAngle = 0;
 double camXZAngle = 0;
 int toggleCam = 0;
-int camAngle = 170;
+int fovy = 75;
 int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
@@ -89,8 +89,7 @@ void change_camera(int angle, int w, int h)
 {
     glMatrixMode(GL_PROJECTION);
 
-    glLoadIdentity();
-
+    glLoadIdentity();    
     gluPerspective(angle,
                    (GLfloat)w / (GLfloat)h, 1, 150.0);
 
@@ -104,7 +103,17 @@ void render_scene()
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(game->get_player()->get_center().x,game->get_player()->get_center().y,game->get_player()->get_center().z +5, game->get_player()->get_center().x,game->get_player()->get_center().y,game->get_player()->get_center().z, 0,1,0);
+    GLdouble eyex, eyey, eyez, posx, posy, posz, upx, upy, upz;
+    eyex = game->get_player()->get_center().x - 5;
+    eyey = -game->get_arena()->get_center().y - game->get_arena()->get_height()/2.0;
+    eyez = game->get_player()->get_center().z + 20;
+    posx = eyex +5;
+    posy = eyey;
+    posz = eyez - 20;
+    upx = 0;
+    upy = 1;
+    upz = 0;
+    gluLookAt(eyex, eyey, eyez, posx, posy, posz, upx, upy, upz);
 
     GLfloat lightParams[] = {0.0, 3.0, 10.0, 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, lightParams);
@@ -224,18 +233,18 @@ void key_press(unsigned char key, int x, int y)
         break;
     case '+':
     {
-        int inc = camAngle >= 180 ? 0 : 1;
-        camAngle += inc;
-        change_camera(camAngle,
+        int inc = fovy >= 180 ? 0 : 1;
+        fovy += inc;
+        change_camera(fovy,
                       glutGet(GLUT_WINDOW_WIDTH),
                       glutGet(GLUT_WINDOW_HEIGHT));
         break;
     }
     case '-':
     {
-        int inc = camAngle <= 5 ? 0 : 1;
-        camAngle -= inc;
-        change_camera(camAngle, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+        int inc = fovy <= 5 ? 0 : 1;
+        fovy -= inc;
+        change_camera(fovy, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
         break;
     }
     break;
@@ -256,7 +265,7 @@ void reshape(int w, int h)
 {
     glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 
-    change_camera(camAngle, w, h);
+    change_camera(fovy, w, h);
 }
 
 // Handle key release
