@@ -46,7 +46,7 @@ void parseCircle(XMLElement *circ, Game *game)
 
 void parseRect(XMLElement *rect, Game *game)
 {
-    GLfloat x, y, width, height;
+    GLfloat x, y, z = 0, width, height;
     Color color;
 
     // Get all tag attributes for the rectangle
@@ -56,9 +56,9 @@ void parseRect(XMLElement *rect, Game *game)
     rect->QueryFloatAttribute("height", &height);
     string rectFill = rect->Attribute("fill");
 
-    Point center = {x, y};
+    Point center = {x, y, z};
 
-    cout << "x: " << x << " y: " << y << " width: " << width << " height: " << height << " rectFill: " << rectFill << endl;
+    cout << "x: " << x << " y: " << y << " z: " << z << " width: " << width << " height: " << height << " rectFill: " << rectFill << endl;
 
     // STUB: this hack fixes the case when the height isn't defined yet or is 0
     GLfloat length = game->get_arena_dimensions().height / 2;
