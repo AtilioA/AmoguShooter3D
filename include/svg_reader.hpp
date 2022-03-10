@@ -6,6 +6,6 @@
 using namespace std;
 
 // Parse a SVG file and add the parsed data to the game object
-void parseSVGFile(string filePath, Game *game);
+void parse_svg_file(string filePath, Game *game);
 
 #endif /* INPUT_H_ */

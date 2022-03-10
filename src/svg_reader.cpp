@@ -8,7 +8,7 @@
 using namespace tinyxml2;
 using namespace std;
 
-void parseCircle(XMLElement *circ, Game *game)
+void parse_circle(XMLElement *circ, Game *game)
 {
     GLfloat cx, cy, r;
     CrewmateColors colors;
@@ -20,7 +20,7 @@ void parseCircle(XMLElement *circ, Game *game)
     string circFill = circ->Attribute("fill");
 
     GLdouble cz = game->get_random_z_inside_arena_given_radius(r);
-    
+
     Point center = {cx, cy, cz};
 
     cout << "cx: " << cx << " cy: " << cy << " random z: " << cz << " r: " << r << " circFill: " << circFill << endl;
@@ -43,7 +43,7 @@ void parseCircle(XMLElement *circ, Game *game)
     }
 }
 
-void parseRect(XMLElement *rect, Game *game)
+void parse_rect(XMLElement *rect, Game *game)
 {
     GLfloat x, y, z = 0, width, height;
     Color color;
@@ -92,7 +92,7 @@ void parseRect(XMLElement *rect, Game *game)
     // cout << "length: " << length << endl;
 }
 
-void parseSVGFile(string filepath, Game *game)
+void parse_svg_file(string filepath, Game *game)
 {
     XMLDocument *gameSVGfile = new XMLDocument();
 
@@ -124,11 +124,11 @@ void parseSVGFile(string filepath, Game *game)
             // Parse elements according to their type
             if (tagType == "rect")
             {
-                parseRect(svgBody, game);
+                parse_rect(svgBody, game);
             }
             else
             {
-                parseCircle(svgBody, game);
+                parse_circle(svgBody, game);
             }
 
             // Get next element to parse in the svg body

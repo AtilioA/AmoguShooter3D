@@ -247,7 +247,6 @@ void Character::draw_character()
     glPushMatrix();
 
     // Move to the center of the character (remember that the coordinate starts from the top left corner)
-    cout << "Character z position: " << this->center.z << endl;
     glTranslatef(this->center.x, -this->center.y, -this->center.z);
 
     // Left leg

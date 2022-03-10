@@ -449,7 +449,7 @@ void Game::reset_game()
 {
     this->free();
 
-    parseSVGFile(this->arenaSVGFilename, this);
+    parse_svg_file(this->arenaSVGFilename, this);
 }
 
 bool Game::is_character_outside_arena(Character *character)

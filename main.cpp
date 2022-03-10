@@ -90,7 +90,7 @@ void change_camera(int angle, int w, int h)
 {
     glMatrixMode(GL_PROJECTION);
 
-    glLoadIdentity();    
+    glLoadIdentity();
     gluPerspective(angle,
                    (GLfloat)w / (GLfloat)h, 1, 150.0);
 
@@ -108,11 +108,11 @@ void render_scene()
     switch (camera)
     {
     // third person
-    case 1:      
+    case 1:
         eyex = game->get_player()->get_center().x - 15;
         eyey = -game->get_player()->get_center().y;
         eyez = game->get_player()->get_center().z + 20;
-        posx = eyex +15;
+        posx = eyex + 15;
         posy = eyey;
         posz = eyez - 20;
         upx = 0;
@@ -120,9 +120,9 @@ void render_scene()
         upz = 0;
         break;
     // first person
-    case 2:        
-        eyex = game->get_player()->get_center().x ;
-        eyey = -game->get_player()->get_center().y + game->get_player()->get_trunk_width()/2.0;
+    case 2:
+        eyex = game->get_player()->get_center().x;
+        eyey = -game->get_player()->get_center().y + game->get_player()->get_trunk_width() / 2.0;
         eyez = 0;
         posx = eyex + 1;
         posy = eyey;
@@ -132,21 +132,21 @@ void render_scene()
         upz = 0;
         break;
     // aim camera
-    case 3:        
+    case 3:
         eyex = game->get_player()->get_center().x - 15;
-        eyey = -game->get_arena()->get_center().y - game->get_arena()->get_height()/2.0;
+        eyey = -game->get_arena()->get_center().y - game->get_arena()->get_height() / 2.0;
         eyez = game->get_player()->get_center().z + 20;
-        posx = eyex +15;
+        posx = eyex + 15;
         posy = eyey;
         posz = eyez - 20;
         upx = 0;
         upy = 1;
         upz = 0;
-        break;    
+        break;
     default:
         break;
-    }   
-    
+    }
+
     gluLookAt(eyex, eyey, eyez, posx, posy, posz, upx, upy, upz);
 
     GLfloat lightParams[] = {0.0, 3.0, 10.0, 1.0};
@@ -222,15 +222,16 @@ void key_press(unsigned char key, int x, int y)
         break;
     // Toggle debug mode
     case '2':
-        camera = 2;;
+        camera = 2;
+        ;
         if (game->get_debug_mode())
         {
             game->get_debug_options().drawCharacterHitbox ? game->set_debug_options(false) : game->set_debug_options(true);
         }
         break;
     case '3':
-        camera = 3;        
-        break;    
+        camera = 3;
+        break;
     case 't':
         if (textureEnabled)
         {
@@ -267,7 +268,7 @@ void key_press(unsigned char key, int x, int y)
     case '+':
     {
         int inc = fovy >= 180 ? 0 : 1;
-        if(camera == 1)
+        if (camera == 1)
             fovy += inc;
         change_camera(fovy,
                       glutGet(GLUT_WINDOW_WIDTH),
@@ -275,9 +276,9 @@ void key_press(unsigned char key, int x, int y)
         break;
     }
     case '-':
-    {        
+    {
         int inc = fovy <= 5 ? 0 : 1;
-        if(camera == 1)
+        if (camera == 1)
             fovy -= inc;
         change_camera(fovy, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
         break;
@@ -533,7 +534,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     cout << "Parsing SVG file..." << endl;
-    parseSVGFile(arena_filename, game);
+    parse_svg_file(arena_filename, game);
     cout << "Finished parsing SVG file." << endl;
 
     // Initialize openGL with Double buffer and RGB color without transparency
