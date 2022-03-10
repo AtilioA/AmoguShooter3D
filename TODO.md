@@ -1,8 +1,8 @@
 # TODO
 
 - [x] A largura da arena, em z, deverá ser 1/2 vezes a altura da arena, em y;
-- [ ] Os obstáculos deverão se estender de um lado ao outro da arena, ou seja, ao longo de z;
-- [ ] Os personagens deverão ser iniciados em sua coordenada x e y, sendo a coordenada z um valor aleatório que o coloque dentro da arena;
+- [x] Os obstáculos deverão se estender de um lado ao outro da arena, ou seja, ao longo de z;
+- [x] Os personagens deverão ser iniciados em sua coordenada x e y, sendo a coordenada z um valor aleatório que o coloque dentro da arena;
 - [ ] O sistema de colisão será parecido com o do trabalho anterior, porém agora representado por um cilindro da altura do jogador e com raio suficiente para conter tronco do jogador;
 - [ ] A arena terá um formato de paralelepípedo e o jogador não poderá sair da arena;
 - [ ] As teclas a e d servirão respectivamente para girar o jogador no sentido anti-horário e horário quando visto de cima da arena;
@@ -24,9 +24,9 @@
 |---|---|
 |Movimentos do oponente|0.1~0.25/0.5|
 |Colisões|0.0/0.5|
-|Jogo (morrer, ganhar, mensagens)|0.0/1.0|
+|Jogo (morrer, ganhar, mensagens)|0.5~1.0/1.0|
 |Andar|0.0/1.0|
-|Pulo|0.1~0.5/1.0|
+|Pulo|0.25~0.75/1.0|
 |Tiro|0.0/1.0|
 |Iluminação 1|0.0/0.5|
 |Câmera 1|0.1~0.2/1.0|
@@ -39,5 +39,5 @@
 
 |Total|Pontos|
 |---|---|
-|Total pessimista|0.3|
-|Total otimista|1.05|
+|Total pessimista|0.95|
+|Total otimista|1.8|
