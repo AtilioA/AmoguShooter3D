@@ -56,27 +56,53 @@ void Terrain::draw_terrain()
 
     if (game->get_debug_options().drawObjectCenter)
     {
-        // Draw dot at the center of the terrain
-        glPushMatrix();
-        glTranslatef(this->center.x, -this->center.y, 0);
-        glPointSize(3);
+        // Draw borders/hitboxes for GL_QUADS faces in red
+        glColor3f(1.0f, 0.0f, 0.0f);
 
-        glColor3f(0.0, 1.0, 1.0);
-        glBegin(GL_POINTS);
-        glVertex2f(0, 0);
-        glEnd();
-        glPopMatrix();
-
-        // Draw borders/hitboxes in red
         glPushMatrix();
+
         glTranslatef(this->center.x, -this->center.y, 0);
-        glColor3f(1.0, 0.0, 0.0);
+
+        // FRONT FACE
         glBegin(GL_LINE_LOOP);
-        glVertex2f(0, 0);
-        glVertex2f(this->width, 0);
-        glVertex2f(this->width, -this->height);
-        glVertex2f(0, -this->height);
+        glVertex3f(0, 0, 0);
+        glVertex3f(this->width, 0, 0);
+        glVertex3f(this->width, -this->height, 0);
+        glVertex3f(0, -this->height, 0);
         glEnd();
+
+        // BACK FACE
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0, 0, -this->length);
+        glVertex3f(this->width, 0, -this->length);
+        glVertex3f(this->width, -this->height, -this->length);
+        glVertex3f(0, -this->height, -this->length);
+        glEnd();
+
+        // LEFT FACE
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, 0, -this->length);
+        glVertex3f(0, -this->height, -this->length);
+        glVertex3f(0, -this->height, 0);
+        glEnd();
+
+        // TOP FACE
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0, 0, 0);
+        glVertex3f(this->width, 0, 0);
+        glVertex3f(this->width, 0, -this->length);
+        glVertex3f(0, 0, -this->length);
+        glEnd();
+
+        // BOTTOM FACE
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(this->width, 0, 0);
+        glVertex3f(this->width, 0, -this->length);
+        glVertex3f(this->width, -this->height, -this->length);
+        glVertex3f(this->width, -this->height, 0);
+        glEnd();
+
         glPopMatrix();
     }
 }
