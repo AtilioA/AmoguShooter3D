@@ -1,14 +1,11 @@
 #include "../include/gunshot.hpp"
 
-// TODO: change to sphere
-void Gunshot::draw_circ(GLint radius, GLfloat R, GLfloat G, GLfloat B)
+// Draw a sphere with given radius and RGB values
+void Gunshot::draw_sphere(GLint radius, GLfloat R, GLfloat G, GLfloat B)
 {
     glColor3f(R * 1.3, G * 1.3, B * 1.3);
-    glBegin(GL_POLYGON);
-    for (int i = 0; i < 360; i += 10)
-    {
-        glVertex2f(radius * 1 * cos(deg_to_radians(i)), radius * 1 * sin(deg_to_radians(i)));
-    }
+    // TODO: Investigate params GLint slices, GLint stacks for glutSolidSphere
+    glutSolidSphere(radius, 20, 20);
     glEnd();
 }
 
@@ -20,8 +17,10 @@ void Gunshot::draw_gunshot()
 void Gunshot::draw_bullet(GLdouble x, GLdouble y, GLdouble z)
 {
     glPushMatrix();
-    glTranslatef(x, -y, 0);
-    draw_circ(this->gRadiusGunshot, this->color.r, this->color.g, this->color.b);
+
+    glTranslatef(x, -y, -z);
+    draw_sphere(this->gRadiusGunshot, this->color.r, this->color.g, this->color.b);
+
     glPopMatrix();
 }
 

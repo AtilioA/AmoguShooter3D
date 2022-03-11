@@ -26,7 +26,7 @@ class Gunshot
     Color color;
 
 private:
-    void draw_circ(GLint radius, GLfloat R, GLfloat G, GLfloat B);
+    void draw_sphere(GLint radius, GLfloat R, GLfloat G, GLfloat B);
     void draw_bullet(GLdouble x, GLdouble y, GLdouble z);
 
 public:
