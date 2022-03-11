@@ -12,6 +12,7 @@ using namespace std;
 
 // Used to tweak mouse sensitivity on move_arm_mouse_helper()
 #define MOUSE_SENSITIVITY 1 / 3
+#define MAX_JUMP_HEIGHT 3
 
 typedef struct tDebug
 {

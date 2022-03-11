@@ -41,7 +41,7 @@ void Game::make_a_character_jump(Character *character, GLfloat frameTime)
     character->set_can_jump(false);
 
     // If the player is jumping, move them up, but only if they're not at the top of the jump (3x their height)
-    if (character->get_is_jumping() && (character->get_jump_initial_y() - character->get_height() * 3) < character->get_center().y)
+    if (character->get_is_jumping() && (character->get_jump_initial_y() - character->get_height() * MAX_JUMP_HEIGHT) < character->get_center().y)
     {
         character->set_is_jumping(true);
         character->set_is_falling(false);
