@@ -408,10 +408,13 @@ bool Character::is_inside_terrain(Terrain *terrain)
 
 bool Character::is_inside_another_character(Character *character)
 {
-    // Check if characters are overlapping, considering both of their trunk widths
-    return this->center.x + this->trunkWidth / 2 > character->center.x - character->trunkWidth / 2 &&
-           this->center.x - this->trunkWidth / 2 < character->center.x + character->trunkWidth / 2 && this->center.y + this->radius > character->center.y - character->radius &&
-           this->center.y - this->radius < character->center.y + character->radius;
+    // Check if characters are overlapping in the 3D space, considering a cilinder containing thei of their trunk widths.
+    return (this->center.x + this->trunkWidth / 2 >= character->center.x - character->trunkWidth / 2 &&
+            this->center.x - this->trunkWidth / 2 <= character->center.x + character->trunkWidth / 2 &&
+            this->center.y + this->radius >= character->center.y - character->radius &&
+            this->center.y - this->radius <= character->center.y + character->radius &&
+            this->center.z + this->radius >= character->center.z - character->radius &&
+            this->center.z - this->radius <= character->center.z + character->radius);
 }
 
 GLfloat Character::get_jump_speed()
