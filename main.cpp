@@ -35,6 +35,7 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 int camera = 1;
+float camAngle = 0;
 
 /* Window dimensions */
 // "será exibida em uma janela de 500x500 pixel do sistema operacional"
@@ -107,10 +108,22 @@ void render_scene()
     GLdouble eyex, eyey, eyez, posx, posy, posz, upx, upy, upz;
     switch (camera)
     {
-    // third person
+    // first person
     case 1:
+        eyex = game->get_player()->get_center().x;
+        eyey = -game->get_player()->get_center().y + game->get_player()->get_trunk_width() / 2.0;
+        eyez = -game->get_player()->get_center().z;
+        posx = eyex + game->get_player()->get_radius()*cos(camAngle/180*M_PI);
+        posy = eyey;
+        posz = eyez + game->get_player()->get_radius()*sin(camAngle/180*M_PI);
+        upx = 0;
+        upy = 1;
+        upz = 0;
+        break;
+    // aim person
+    case 2:
         eyex = game->get_player()->get_center().x - 15;
-        eyey = -game->get_player()->get_center().y;
+        eyey = -game->get_arena()->get_center().y - game->get_arena()->get_height() / 2.0;
         eyez = game->get_player()->get_center().z + 20;
         posx = eyex + 15;
         posy = eyey;
@@ -119,19 +132,7 @@ void render_scene()
         upy = 1;
         upz = 0;
         break;
-    // first person
-    case 2:
-        eyex = game->get_player()->get_center().x;
-        eyey = -game->get_player()->get_center().y + game->get_player()->get_trunk_width() / 2.0;
-        eyez = 0;
-        posx = eyex + 1;
-        posy = eyey;
-        posz = eyez;
-        upx = 0;
-        upy = 1;
-        upz = 0;
-        break;
-    // aim camera
+    // third camera
     case 3:
         eyex = game->get_player()->get_center().x - 15;
         eyey = -game->get_arena()->get_center().y - game->get_arena()->get_height() / 2.0;
@@ -161,14 +162,19 @@ void render_scene()
     else
     {
         // cout << "\nDrawing game elements:" << endl;
+        
         // cout << "Drawing arena... ";
         game->get_arena()->draw_terrain();
-        // cout << "Drawing terrains... ";
         game->draw_terrains();
-        // cout << "Drawing player... ";
         game->draw_player();
         // cout << "Drawing enemies..." << endl;
         game->draw_enemies();
+
+        
+        // cout << "Drawing terrains... ";
+        
+        // cout << "Drawing player... ";
+        
         // cout << "Drawing gunshots..." << endl;
         for (auto &gunshot : game->get_characters_gunshots())
         {
@@ -210,6 +216,15 @@ void key_press(unsigned char key, int x, int y)
     case 'D':
         keyStatus[(int)('d')] = 1; // Using keyStatus trick
         break;
+    case 'w':
+    case 'W':
+        keyStatus[(int)('w')] = 1; // Using keyStatus trick
+        break;
+    // Walk right
+    case 's':
+    case 'S':
+        keyStatus[(int)('s')] = 1; // Using keyStatus trick
+        break;
     // Reset game (only works if the game is over or if the debug mode is enabled)
     case 'r':
     case 'R':
@@ -223,7 +238,6 @@ void key_press(unsigned char key, int x, int y)
     // Toggle debug mode
     case '2':
         camera = 2;
-        ;
         if (game->get_debug_mode())
         {
             game->get_debug_options().drawCharacterHitbox ? game->set_debug_options(false) : game->set_debug_options(true);
@@ -231,6 +245,10 @@ void key_press(unsigned char key, int x, int y)
         break;
     case '3':
         camera = 3;
+        fovy = 75;
+        change_camera(fovy,
+                      glutGet(GLUT_WINDOW_WIDTH),
+                      glutGet(GLUT_WINDOW_HEIGHT));
         break;
     case 't':
         if (textureEnabled)
@@ -254,21 +272,21 @@ void key_press(unsigned char key, int x, int y)
         }
         lightingEnabled = !lightingEnabled;
         break;
-    case 's':
-        if (smoothEnabled)
-        {
-            glShadeModel(GL_FLAT);
-        }
-        else
-        {
-            glShadeModel(GL_SMOOTH);
-        }
-        smoothEnabled = !smoothEnabled;
-        break;
+    // case 's':
+    //     if (smoothEnabled)
+    //     {
+    //         glShadeModel(GL_FLAT);
+    //     }
+    //     else
+    //     {
+    //         glShadeModel(GL_SMOOTH);
+    //     }
+    //     smoothEnabled = !smoothEnabled;
+    //     break;
     case '+':
     {
         int inc = fovy >= 180 ? 0 : 1;
-        if (camera == 1)
+        if (camera == 3)
             fovy += inc;
         change_camera(fovy,
                       glutGet(GLUT_WINDOW_WIDTH),
@@ -278,7 +296,7 @@ void key_press(unsigned char key, int x, int y)
     case '-':
     {
         int inc = fovy <= 5 ? 0 : 1;
-        if (camera == 1)
+        if (camera == 3)
             fovy -= inc;
         change_camera(fovy, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
         break;
@@ -386,38 +404,6 @@ void idle(void)
 
     Player *player = game->get_player();
 
-    // Use local camera (follows the player)
-    // The camera shouldn't move in y direction, only in x
-    if (!game->get_debug_options().globalCamera)
-    {
-        // glMatrixMode(GL_PROJECTION); // Select the projection matrix
-        // glLoadIdentity();
-        // glMatrixMode(GL_MODELVIEW);
-        // glLoadIdentity();
-        // gluLookAt(0, 2, 5, player->get_center().x, player->get_center().y, player->get_center().z, 0, 1, 0);
-        // glOrtho(-game->get_arena()->get_height() / 2 + player->get_center().x,          // X coordinate of left edge
-        //         game->get_arena()->get_height() / 2 + player->get_center().x,           // X coordinate of right edge
-        //         (-game->get_arena()->get_center().y - game->get_arena()->get_height()), // Y coordinate of bottom edge
-        //         -game->get_arena()->get_center().y,                                     // Y coordinate of top edge
-        //         -1,                                                                     // Z coordinate of the “near” plane
-        //         1);                                                                     // Z coordinate of the “far” plane
-        // glMatrixMode(GL_MODELVIEW); // Select the projection matrix
-    }
-    // else // if global camera is enabled
-    // {
-    //     glMatrixMode(GL_PROJECTION); // Select the projection matrix
-    //     glLoadIdentity();
-    //     glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
-    //             (ViewingWidth / 2),   // X coordinate of right edge
-    //             -(ViewingHeight / 2), // Y coordinate of bottom edge
-    //             (ViewingHeight / 2),  // Y coordinate of top edge
-    //             -100,                 // Z coordinate of the “near” plane
-    //             100);                 // Z coordinate of the “far” plane
-
-    //     glMatrixMode(GL_MODELVIEW); // Select the projection matrix
-    //     glLoadIdentity();
-    // }
-
     // If player has reached the end of the level or has died, stop the game
     if (game->has_game_reached_end_state())
     {
@@ -483,15 +469,27 @@ void idle(void)
         }
 
         /* Make Player move */
-        if (keyStatus['d'] == 1 || keyStatus['D'] == 1)
+        if (keyStatus['w'] == 1 || keyStatus['W'] == 1)
         {
             dx += inc;
             game->move_a_character(player, dx, dy, frameTime);
         }
-        if (keyStatus['a'] == 1 || keyStatus['A'] == 1)
+        if (keyStatus['s'] == 1 || keyStatus['S'] == 1)
         {
             dx -= inc;
             game->move_a_character(player, dx, dy, frameTime);
+        }
+        if (keyStatus['a'] == 1 || keyStatus['A'] == 1)
+        {
+            camAngle -= 0.01;
+            if(camAngle < 0) camAngle = 359;
+            cout << "camAngle: " << camAngle << endl;
+        }
+        if (keyStatus['d'] == 1 || keyStatus['D'] == 1)
+        {
+            camAngle += 0.01;
+            if(camAngle > 360) camAngle = 1;
+            cout << "camAngle: " << camAngle << endl;
         }
 
         // Apply gravity to all characters
