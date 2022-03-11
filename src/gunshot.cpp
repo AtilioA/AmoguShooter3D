@@ -36,19 +36,12 @@ void Gunshot::move_gunshot(GLdouble frameTime)
 
 bool Gunshot::is_inside_character(Character *character)
 {
-    // TODO: Also use Z to check if the Gunshot is inside the Character
+    // Check if the Gunshot is inside the Character in a 3D space considering that the character is drawn from the center to the edges.
+    GLdouble xDistGunshot = abs(this->gX - character->get_center().x);
+    GLdouble yDistGunshot = abs(this->gY - character->get_center().y);
+    GLdouble zDistGunshot = abs(this->gZ - character->get_center().z);
 
-    // Check if the Gunshot is inside the Character considering that the character is drawn from the center to the edges (hence the divisions by 2)
-    if (this->gX + this->gRadiusGunshot > character->get_center().x - character->get_trunk_width() / 2 &&
-        this->gX - this->gRadiusGunshot < character->get_center().x + character->get_trunk_width() / 2 && this->gY + this->gRadiusGunshot > character->get_center().y - character->get_radius() &&
-        this->gY - this->gRadiusGunshot < character->get_center().y + character->get_radius())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return ((xDistGunshot <= character->get_radius()) && (yDistGunshot <= character->get_radius()) && (zDistGunshot <= character->get_radius()));
 }
 
 bool Gunshot::is_inside_terrain(Terrain *terrain)
