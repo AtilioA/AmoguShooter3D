@@ -52,6 +52,7 @@ protected:
     GLfloat jumpTime;
     GLfloat jumpSpeed;
     GLfloat jumpInitialY;
+    GLfloat gThetaBody;
 
     /* Angle of each joint */
     GLfloat gThetaThigh;
@@ -80,6 +81,7 @@ public:
         this->gThetaLeg = 0;
         this->gThetaThigh = 0;
         this->gThetaLegLIMIT = 15;
+        this->gThetaBody = 0;
 
         // Each Character starts facing right and walking in obverse direction
         this->facingDirection = Direction::RIGHT;
@@ -184,6 +186,8 @@ public:
     void rotate_leg(GLfloat inc);
     void set_theta_arm(GLfloat theta);
     GLfloat get_theta_arm();
+    void change_theta_body(GLfloat dTheta, GLfloat frameTime);
+    GLfloat get_theta_body();
 };
 
 #endif /* CHARACTER_H */

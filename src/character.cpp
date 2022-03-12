@@ -248,7 +248,7 @@ void Character::draw_character()
 
     // Move to the center of the character (remember that the coordinate starts from the top left corner)
     glTranslatef(this->center.x, -this->center.y, -this->center.z);
-
+    glRotatef(-this->gThetaBody,0,1,0);
     // Left leg
     glPushMatrix();
     glTranslatef(-this->trunkWidth / 2, -this->radius + this->height / 8 * 1.5, 0);
@@ -344,8 +344,9 @@ void Character::move_character(GLfloat dx, GLfloat dy, GLfloat frameTime)
         this->facingDirection = Direction::RIGHT;
     }
 
-    this->center.x += dx * frameTime;
+    this->center.x += dx * frameTime * cos(this->gThetaBody/180*M_PI);
     this->center.y += dy * frameTime;
+    this->center.z += dx * frameTime * -sin((this->gThetaBody/180*M_PI));    
 
     // Only animate if the character is moving in the x direction and is not jumping
     if (!this->isJumping && dx != 0)
@@ -505,6 +506,18 @@ void Character::set_theta_arm(GLfloat theta)
 GLfloat Character::get_theta_arm()
 {
     return this->gThetaArm;
+}
+
+void Character::change_theta_body(GLfloat dTheta, GLfloat frameTime)
+{
+    this->gThetaBody = (this->gThetaBody + dTheta*frameTime);
+    if(this->gThetaBody > 360) this->gThetaBody -= 360;
+    if(this->gThetaBody < 0) this->gThetaBody += 360;
+}
+
+GLfloat Character::get_theta_body()
+{
+    return this->gThetaBody;
 }
 
 void Character::set_radius(GLdouble r)

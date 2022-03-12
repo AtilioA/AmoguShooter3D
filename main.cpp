@@ -35,7 +35,7 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 int camera = 1;
-float camAngle = 0;
+
 
 /* Window dimensions */
 // "será exibida em uma janela de 500x500 pixel do sistema operacional"
@@ -113,9 +113,9 @@ void render_scene()
         eyex = game->get_player()->get_center().x;
         eyey = -game->get_player()->get_center().y + game->get_player()->get_trunk_width() / 2.0;
         eyez = -game->get_player()->get_center().z;
-        posx = eyex + game->get_player()->get_radius()*cos(camAngle/180*M_PI);
+        posx = eyex + game->get_player()->get_radius()*cos(game->get_player()->get_theta_body()/180*M_PI);
         posy = eyey;
-        posz = eyez + game->get_player()->get_radius()*sin(camAngle/180*M_PI);
+        posz = eyez + game->get_player()->get_radius()*sin(game->get_player()->get_theta_body()/180*M_PI);
         upx = 0;
         upy = 1;
         upz = 0;
@@ -472,7 +472,7 @@ void idle(void)
         if (keyStatus['w'] == 1 || keyStatus['W'] == 1)
         {
             dx += inc;
-            game->move_a_character(player, dx, dy, frameTime);
+            game->move_a_character(player, dx, dy, frameTime);            
         }
         if (keyStatus['s'] == 1 || keyStatus['S'] == 1)
         {
@@ -481,15 +481,11 @@ void idle(void)
         }
         if (keyStatus['a'] == 1 || keyStatus['A'] == 1)
         {
-            camAngle -= 0.01;
-            if(camAngle < 0) camAngle = 359;
-            cout << "camAngle: " << camAngle << endl;
+            game->get_player()->change_theta_body(-0.05,frameTime);
         }
         if (keyStatus['d'] == 1 || keyStatus['D'] == 1)
         {
-            camAngle += 0.01;
-            if(camAngle > 360) camAngle = 1;
-            cout << "camAngle: " << camAngle << endl;
+            game->get_player()->change_theta_body(0.05,frameTime);            
         }
 
         // Apply gravity to all characters
