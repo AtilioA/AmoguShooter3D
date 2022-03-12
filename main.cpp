@@ -134,12 +134,12 @@ void render_scene()
         break;
     // third camera
     case 3:
-        eyex = game->get_player()->get_center().x - 15;
-        eyey = -game->get_arena()->get_center().y - game->get_arena()->get_height() / 2.0;
-        eyez = game->get_player()->get_center().z + 20;
-        posx = eyex + 15;
-        posy = eyey;
-        posz = eyez - 20;
+        eyex = game->get_player()->get_center().x - game->get_player()->get_radius()*2*cos(camXZAngle/180*M_PI);
+        eyey = -game->get_player()->get_center().y + game->get_player()->get_radius();
+        eyez = -game->get_player()->get_center().z + game->get_player()->get_radius()*2*sin(camXZAngle/180*M_PI);
+        posx = game->get_player()->get_center().x;
+        posy = -game->get_player()->get_center().y;
+        posz = -game->get_player()->get_center().z;
         upx = 0;
         upy = 1;
         upz = 0;
@@ -283,6 +283,10 @@ void key_press(unsigned char key, int x, int y)
     //     }
     //     smoothEnabled = !smoothEnabled;
     //     break;
+    case 'X':
+    case 'x':
+        keyStatus[(int)('x')] = 1;
+        break;
     case '+':
     {
         int inc = fovy >= 180 ? 0 : 1;
@@ -481,11 +485,16 @@ void idle(void)
         }
         if (keyStatus['a'] == 1 || keyStatus['A'] == 1)
         {
-            game->get_player()->change_theta_body(-0.05,frameTime);
+            game->get_player()->change_theta_body(-0.08,frameTime);
         }
         if (keyStatus['d'] == 1 || keyStatus['D'] == 1)
         {
-            game->get_player()->change_theta_body(0.05,frameTime);            
+            game->get_player()->change_theta_body(0.08,frameTime);            
+        }
+        if (keyStatus['x'] == 1 && camera == 3)
+        {
+            camXZAngle += 0.08*frameTime;
+            if(camXZAngle > 360) camXZAngle -= 360;
         }
 
         // Apply gravity to all characters
