@@ -29,7 +29,7 @@ double angleYear = 0;
 double camDist = 50;
 double camXYAngle = 0;
 double camXZAngle = 0;
-int toggleCam = 0;
+int freeCam = 0;
 int fovy = 75;
 int lastX = 0;
 int lastY = 0;
@@ -50,6 +50,8 @@ static bool shouldPreserveFramerateSpeed = true;
 
 // Auxiliary variable to calculate mouse movement (and rotate player's arm)
 GLfloat oldY = 0;
+GLfloat camOldX = 0;
+GLfloat camOldY = 0;
 
 Game *game = new Game();
 
@@ -98,13 +100,8 @@ void change_camera(int angle, int w, int h)
     glMatrixMode(GL_MODELVIEW);
 }
 
-void render_scene()
+void updateCamera()
 {
-    // Clear the screen.
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
     GLdouble eyex, eyey, eyez, posx, posy, posz, upx, upy, upz;
     switch (camera)
     {
@@ -149,7 +146,37 @@ void render_scene()
     }
 
     gluLookAt(eyex, eyey, eyez, posx, posy, posz, upx, upy, upz);
+}
 
+void drag_and_drop(int x, int y)
+{    
+    if(freeCam){
+        if (camOldY == 0)
+        {    
+            camOldY = y;
+            camOldX = x;            
+        }
+        GLfloat deltaY = y - camOldY;
+        GLfloat deltaX = x - camOldX;
+        camXZAngle += deltaX*180/glutGet(GLUT_WINDOW_WIDTH);
+        if (camXZAngle > 360) camXZAngle -= 360;
+        if (camXZAngle < 0) camXZAngle += 360;
+        camXYAngle += deltaY*180/glutGet(GLUT_WINDOW_HEIGHT);
+        if(fabs(camXYAngle) > 60) camXYAngle = 60*((0 < camXYAngle) - (camXYAngle < 0));
+        camOldX = x;
+        camOldY = y;
+    }   
+}
+void render_scene()
+{
+    // Clear the screen.
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    updateCamera();
+    
     GLfloat lightParams[] = {0.0, 3.0, 10.0, 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, lightParams);
 
@@ -246,6 +273,8 @@ void key_press(unsigned char key, int x, int y)
     case '3':
         camera = 3;
         fovy = 75;
+        camXYAngle = 0;
+        camXZAngle = 0;
         change_camera(fovy,
                       glutGet(GLUT_WINDOW_WIDTH),
                       glutGet(GLUT_WINDOW_HEIGHT));
@@ -350,11 +379,10 @@ void ResetKeyStatus()
 void mouse_click(int button, int state, int mousex, int mousey)
 {
     // Player shoot on left click
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && !freeCam)
     {
         game->make_a_character_shoot(game->get_player());
     }
-
     // Redraw the scene (maybe unnecessary)
     glutPostRedisplay();
 }
@@ -493,8 +521,11 @@ void idle(void)
         }
         if (keyStatus['x'] == 1 && camera == 3)
         {
-            camXZAngle += 0.08*frameTime;
-            if(camXZAngle > 360) camXZAngle -= 360;
+            freeCam = 1;            
+        }
+        else
+        {
+            freeCam = 0;
         }
 
         // Apply gravity to all characters
@@ -512,7 +543,8 @@ void idle(void)
 void aim_with_mouse(int x, int y)
 {
     // Rotate player's arm based on mouse movement
-    game->get_player()->move_arm_mouse_helper(y, &oldY);
+    if (!freeCam)
+        game->get_player()->move_arm_mouse_helper(y, &oldY);
 }
 
 int main(int argc, char *argv[])
@@ -549,7 +581,7 @@ int main(int argc, char *argv[])
     // Create the window
     glutInitWindowSize(Width, Height);
     glutInitWindowPosition(75, 75);
-    glutCreateWindow("Trabalho 2D");
+    glutCreateWindow("Trabalho 3D");
 
     /* Define callbacks */
     glutDisplayFunc(render_scene);
@@ -559,6 +591,7 @@ int main(int argc, char *argv[])
     // Mouse events handlers
     glutMouseFunc(mouse_click);
     glutPassiveMotionFunc(aim_with_mouse);
+    glutMotionFunc(drag_and_drop);
     // Main rendering loop
     glutIdleFunc(idle);
 
