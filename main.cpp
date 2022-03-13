@@ -27,7 +27,7 @@ double angleYear = 0;
 
 // Camera controls
 double camDist = 50;
-double camXYAngle = 0;
+double camXYAngle = 60;
 double camXZAngle = 0;
 int freeCam = 0;
 int fovy = 75;
@@ -132,7 +132,7 @@ void updateCamera()
     // third camera
     case 3:
         eyex = game->get_player()->get_center().x - game->get_player()->get_radius()*2*cos(camXZAngle/180*M_PI);
-        eyey = -game->get_player()->get_center().y + game->get_player()->get_radius();
+        eyey = -game->get_player()->get_center().y + game->get_player()->get_radius()*sin((camXYAngle)/180*M_PI);
         eyez = -game->get_player()->get_center().z + game->get_player()->get_radius()*2*sin(camXZAngle/180*M_PI);
         posx = game->get_player()->get_center().x;
         posy = -game->get_player()->get_center().y;
@@ -273,7 +273,7 @@ void key_press(unsigned char key, int x, int y)
     case '3':
         camera = 3;
         fovy = 75;
-        camXYAngle = 0;
+        camXYAngle = 60;
         camXZAngle = 0;
         change_camera(fovy,
                       glutGet(GLUT_WINDOW_WIDTH),
@@ -382,6 +382,11 @@ void mouse_click(int button, int state, int mousex, int mousey)
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && !freeCam)
     {
         game->make_a_character_shoot(game->get_player());
+    }
+    if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+    {
+        camOldX = 0;
+        camOldY = 0;
     }
     // Redraw the scene (maybe unnecessary)
     glutPostRedisplay();
