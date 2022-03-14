@@ -77,8 +77,13 @@ void RenderString(float x, float y)
         cout << "GAME OVER" << endl;
     }
 
-    // Raster position for the text, determined by the player's position
-    glRasterPos2f(game->get_player()->get_center().x - stringMargin, -game->get_arena()->get_center().y - game->get_arena()->get_height() / 2);
+    // Move the camera to the origin and the text in the origin
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, ViewingWidth, ViewingHeight, 0, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glRasterPos2f(x + ViewingWidth / 4 - stringMargin, y + ViewingHeight / 2);
 
     // Navigate through the string and display each character
     char *text;
@@ -473,6 +478,8 @@ void idle(void)
         if (keyStatus['r'] == 1 || keyStatus['R'] == 1)
         {
             game->reset_game();
+            // FIXME: Camera should be reset
+            updateCamera();
         }
     }
     else
