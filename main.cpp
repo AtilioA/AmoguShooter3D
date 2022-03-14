@@ -35,6 +35,7 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 int camera = 1;
+int oldCamera = 0;
 
 
 /* Window dimensions */
@@ -119,12 +120,12 @@ void updateCamera()
         break;
     // aim person
     case 2:
-        eyex = game->get_player()->get_center().x - 15;
-        eyey = -game->get_arena()->get_center().y - game->get_arena()->get_height() / 2.0;
-        eyez = game->get_player()->get_center().z + 20;
-        posx = eyex + 15;
-        posy = eyey;
-        posz = eyez - 20;
+        eyex = game->get_player()->get_center().x + game->get_player()->get_radius()*cos(game->get_player()->get_theta_body()/180*M_PI);
+        eyey = -game->get_player()->get_center().y;
+        eyez = -game->get_player()->get_center().z + game->get_player()->get_radius()*sin(game->get_player()->get_theta_body()/180*M_PI);
+        posx = eyex + game->get_player()->get_radius()*cos(game->get_player()->get_theta_body()/180*M_PI);
+        posy = eyey + game->get_player()->get_radius()*sin(game->get_player()->get_theta_arm()/180*M_PI);
+        posz = eyez + game->get_player()->get_radius()*sin(game->get_player()->get_theta_body()/180*M_PI);
         upx = 0;
         upy = 1;
         upz = 0;
@@ -280,13 +281,16 @@ void key_press(unsigned char key, int x, int y)
                       glutGet(GLUT_WINDOW_HEIGHT));
         break;
     case 't':
+    
         if (textureEnabled)
         {
-            glDisable(GL_TEXTURE_2D);
+            glDisable(GL_DEPTH_TEST);
+            // glDisable(GL_TEXTURE_2D);
         }
         else
         {
-            glEnable(GL_TEXTURE_2D);
+            glEnable(GL_DEPTH_TEST);
+            // glEnable(GL_TEXTURE_2D);
         }
         textureEnabled = !textureEnabled;
         break;
@@ -383,22 +387,32 @@ void mouse_click(int button, int state, int mousex, int mousey)
     {
         game->make_a_character_shoot(game->get_player());
     }
-    if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+    else if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
     {
         camOldX = 0;
         camOldY = 0;
     }
+    else if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+        oldCamera = camera;
+        camera = 2;
+    }
+    else if(button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
+    {
+        camera = oldCamera;
+    }
+    
     // Redraw the scene (maybe unnecessary)
     glutPostRedisplay();
 }
 
 void init(Game *game)
 {
-    // glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     // glEnable(GL_TEXTURE_2D);
     // glEnable(GL_LIGHTING);
     // glShadeModel(GL_SMOOTH);
-    // glDepthFunc(GL_LEQUAL);
+    glDepthFunc(GL_LEQUAL);
 
     // Initialize all keys to 'up'
     ResetKeyStatus();

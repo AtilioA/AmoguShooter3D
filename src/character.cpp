@@ -55,7 +55,6 @@ void Character::move_arm_mouse_helper(GLfloat yMouse, GLfloat *oldY)
     {
         this->gThetaArm = this->gThetaArmMIN;
     }
-
     // Update the old mouse position
     *oldY = yMouse;
 }

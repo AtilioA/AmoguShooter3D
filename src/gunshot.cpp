@@ -29,9 +29,9 @@ void Gunshot::move_gunshot(GLdouble frameTime)
     /* Move the Gunshot considering the direction and the speed.
      * The angle must be converted to radians for the trigonometric functions.
      * The frameTime is used to normalize the movement. */
-    this->gX += this->gVel * sin(deg_to_radians(this->gDirectionAng)) * frameTime;
-    this->gY += this->gVel * cos(deg_to_radians(this->gDirectionAng)) * frameTime;
-    // this->gZ += this->gVel * ...(deg_to_radians(this->gDirectionAng)) * frameTime;
+    this->gX += this->gVel * cos(deg_to_radians(this->gDirectionXZAng)) * frameTime;
+    this->gY += this->gVel * cos(deg_to_radians(this->gDirectionXYAng)) * frameTime;
+    this->gZ += this->gVel * -sin(deg_to_radians(this->gDirectionXZAng)) * frameTime;
 }
 
 bool Gunshot::is_inside_character(Character *character)

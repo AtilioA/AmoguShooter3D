@@ -19,7 +19,8 @@ class Gunshot
     GLdouble gX;
     GLdouble gY;
     GLdouble gZ;
-    GLfloat gDirectionAng;
+    GLfloat gDirectionXYAng;
+    GLfloat gDirectionXZAng;
     GLdouble gVel;
     GLdouble gRadiusGunshot;
     GLint facingDirection;
@@ -30,7 +31,7 @@ private:
     void draw_bullet(GLdouble x, GLdouble y, GLdouble z);
 
 public:
-    Gunshot(GLint shooterID, GLdouble x, GLdouble y, GLdouble z, GLdouble charSpeed, GLdouble charRadius, GLfloat directionAng, GLint facingDirection, Color crewmateUpperBody)
+    Gunshot(GLint shooterID, GLdouble x, GLdouble y, GLdouble z, GLdouble charSpeed, GLdouble charRadius, GLfloat directionXYAng, GLfloat directionXZAng, GLint facingDirection, Color crewmateUpperBody)
     {
         this->shooterID = shooterID;
         this->gXInit = x;
@@ -39,7 +40,8 @@ public:
         this->gX = x;
         this->gY = y;
         this->gZ = z;
-        this->gDirectionAng = directionAng;
+        this->gDirectionXYAng = directionXYAng;
+        this->gDirectionXZAng = directionXZAng;
         // The Gunshot speed must be 2 times the character's speed
         this->gVel = charSpeed * 2;
         // We define the gunshot radius as one quarter of the character's radius
