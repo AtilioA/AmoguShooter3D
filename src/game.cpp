@@ -504,6 +504,31 @@ bool Game::is_character_outside_arena(Character *character)
     return false;
 }
 
+bool Game::is_camera_outside_arena(GLdouble x, GLdouble y, GLdouble z)
+{
+    Terrain *arenaTerrain = this->arena;
+    Point arenaPos = this->arena->get_center();
+
+    // Check if camera is outside the arena vertically
+    if (-y < arenaPos.y || -y > arenaPos.y + arenaTerrain->get_height())
+    {
+        return true;
+    }
+
+    // Check if camera is outside the arena horizontally
+    if (x < arenaPos.x || x > arenaPos.x + arenaTerrain->get_width())
+    {
+        return true;
+    }
+
+    if (-z < arenaPos.z || -z > arenaPos.z + arenaTerrain->get_length())
+    {
+        return true;
+    }
+
+    return false;
+}
+
 bool Game::is_character_inside_any_other_character(Character *character)
 {
     GLint charID = character->get_id();

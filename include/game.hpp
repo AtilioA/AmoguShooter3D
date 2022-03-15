@@ -86,6 +86,7 @@ public:
     void apply_gravity(GLfloat frameTime);
     bool is_character_inside_any_other_character(Character *character);
     bool is_character_outside_arena(Character *character);
+    bool is_camera_outside_arena(GLdouble x, GLdouble y, GLdouble z);
     bool is_character_inside_any_terrain(Character *character);
     bool will_enemy_fall(Enemy *enemy, GLdouble dx, GLfloat frameTime);
     GLdouble get_random_z_inside_arena_given_radius(GLfloat radius);

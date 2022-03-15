@@ -36,6 +36,7 @@ int lastY = 0;
 int buttonDown = 0;
 int camera = 1;
 int oldCamera = 0;
+int zoom = 0;
 
 
 /* Window dimensions */
@@ -137,9 +138,16 @@ void updateCamera()
         break;
     // third camera
     case 3:
-        eyex = game->get_player()->get_center().x - game->get_player()->get_radius()*2*cos(camXZAngle/180*M_PI);
-        eyey = -game->get_player()->get_center().y + game->get_player()->get_radius()*sin((camXYAngle)/180*M_PI);
-        eyez = -game->get_player()->get_center().z + game->get_player()->get_radius()*2*sin(camXZAngle/180*M_PI);
+        eyex = game->get_player()->get_center().x - (game->get_player()->get_radius() - zoom)*2*cos(camXZAngle/180*M_PI);
+        eyey = -game->get_player()->get_center().y + (game->get_player()->get_radius() - zoom)*sin((camXYAngle)/180*M_PI);
+        eyez = -game->get_player()->get_center().z + (game->get_player()->get_radius() - zoom)*2*sin(camXZAngle/180*M_PI);
+        if(game->is_camera_outside_arena(eyex, eyey, eyez))
+        {
+            zoom = zoom >= 2 ? zoom : zoom + 1;
+            eyex = game->get_player()->get_center().x - (game->get_player()->get_radius() - zoom)*2*cos(camXZAngle/180*M_PI);
+            eyey = -game->get_player()->get_center().y + (game->get_player()->get_radius() - zoom)*sin((camXYAngle)/180*M_PI);
+            eyez = -game->get_player()->get_center().z + (game->get_player()->get_radius() - zoom)*2*sin(camXZAngle/180*M_PI);
+        }
         posx = game->get_player()->get_center().x;
         posy = -game->get_player()->get_center().y;
         posz = -game->get_player()->get_center().z;
@@ -147,7 +155,7 @@ void updateCamera()
         upy = 1;
         upz = 0;
         break;
-    default:
+    default:    
         break;
     }
 
@@ -323,24 +331,20 @@ void key_press(unsigned char key, int x, int y)
     //     break;
     case 'X':
     case 'x':
+        camOldX = 0;
+        camOldY = 0;
         keyStatus[(int)('x')] = 1;
         break;
     case '+':
     {
-        int inc = fovy >= 180 ? 0 : 1;
         if (camera == 3)
-            fovy += inc;
-        change_camera(fovy,
-                      glutGet(GLUT_WINDOW_WIDTH),
-                      glutGet(GLUT_WINDOW_HEIGHT));
+            zoom = zoom >= 2 ? zoom : zoom +1;
         break;
     }
     case '-':
     {
-        int inc = fovy <= 5 ? 0 : 1;
         if (camera == 3)
-            fovy -= inc;
-        change_camera(fovy, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+            zoom--;
         break;
     }
     break;
@@ -391,12 +395,7 @@ void mouse_click(int button, int state, int mousex, int mousey)
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && !freeCam)
     {
         game->make_a_character_shoot(game->get_player());
-    }
-    else if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-    {
-        camOldX = 0;
-        camOldY = 0;
-    }
+    }    
     else if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
     {
         oldCamera = camera;
@@ -478,8 +477,9 @@ void idle(void)
         if (keyStatus['r'] == 1 || keyStatus['R'] == 1)
         {
             game->reset_game();
-            // FIXME: Camera should be reset
-            updateCamera();
+            change_camera(fovy,
+                      glutGet(GLUT_WINDOW_WIDTH),
+                      glutGet(GLUT_WINDOW_HEIGHT));
         }
     }
     else
@@ -571,6 +571,25 @@ void aim_with_mouse(int x, int y)
     // Rotate player's arm based on mouse movement
     if (!freeCam)
         game->get_player()->move_arm_mouse_helper(y, &oldY);
+    else
+    {
+        if (camOldY == 0)
+        {    
+            camOldY = y;
+            camOldX = x;            
+        }
+        GLfloat deltaY = y - camOldY;
+        GLfloat deltaX = x - camOldX;
+        camXZAngle += deltaX*180/glutGet(GLUT_WINDOW_WIDTH);
+        if (camXZAngle > 360) camXZAngle -= 360;
+        if (camXZAngle < 0) camXZAngle += 360;
+        camXYAngle += deltaY*180/glutGet(GLUT_WINDOW_HEIGHT);
+        if(fabs(camXYAngle) > 60) camXYAngle = 60*((0 < camXYAngle) - (camXYAngle < 0));
+        camOldX = x;
+        camOldY = y;
+    }  
+    
+    
 }
 
 int main(int argc, char *argv[])
@@ -617,7 +636,7 @@ int main(int argc, char *argv[])
     // Mouse events handlers
     glutMouseFunc(mouse_click);
     glutPassiveMotionFunc(aim_with_mouse);
-    glutMotionFunc(drag_and_drop);
+    // glutMotionFunc(drag_and_drop);
     // Main rendering loop
     glutIdleFunc(idle);
 
