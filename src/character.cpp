@@ -247,7 +247,7 @@ void Character::draw_character()
 
     // Move to the center of the character (remember that the coordinate starts from the top left corner)
     glTranslatef(this->center.x, -this->center.y, -this->center.z);
-    glRotatef(-this->gThetaBody,0,1,0);
+    glRotatef(-this->gThetaBody, 0, 1, 0);
     // Left leg
     glPushMatrix();
     glTranslatef(-this->trunkWidth / 2, -this->radius + this->height / 8 * 1.5, 0);
@@ -310,21 +310,16 @@ void Character::draw_character()
         glPopMatrix();
     }
 
-    // Draw Character's borders/hitbox
-    if (game->get_debug_options().drawCharacterHitbox)
-    {
-        glPushMatrix();
-        glTranslatef(this->center.x, -this->center.y - this->radius, -this->center.z);
-        glColor3f(1.0, 0.0, 0.0);
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(0, 0);
-        glVertex2f(-this->trunkWidth / 2, 0);
-        glVertex2f(-this->trunkWidth / 2, this->height);
-        glVertex2f(this->trunkWidth / 2, this->height);
-        glVertex2f(this->trunkWidth / 2, 0);
-        glEnd();
-        glPopMatrix();
-    }
+    // // Draw Character's borders/hitbox in 3D
+    // if (game->get_debug_options().drawCharacterHitbox)
+    // {
+    //     glPushMatrix();
+    //     glTranslatef(this->center.x, -this->center.y - this->radius, -this->center.z);
+    //     glColor3f(1.0, 0.0, 0.0);
+    //     glEnd();
+
+    //     glPopMatrix();
+    // }
 
     // Arm
     glPushMatrix();
@@ -343,9 +338,9 @@ void Character::move_character(GLfloat dx, GLfloat dy, GLfloat frameTime)
         this->facingDirection = Direction::RIGHT;
     }
 
-    this->center.x += dx * frameTime * cos(this->gThetaBody/180*M_PI);
+    this->center.x += dx * frameTime * cos(this->gThetaBody / 180 * M_PI);
     this->center.y += dy * frameTime;
-    this->center.z += dx * frameTime * -sin((this->gThetaBody/180*M_PI));    
+    this->center.z += dx * frameTime * -sin((this->gThetaBody / 180 * M_PI));
 
     // Only animate if the character is moving in the x direction and is not jumping
     if (!this->isJumping && dx != 0)
@@ -413,8 +408,8 @@ bool Character::is_inside_another_character(Character *character)
             this->center.x - this->trunkWidth / 2 <= character->center.x + character->trunkWidth / 2 &&
             this->center.y + this->radius >= character->center.y - character->radius &&
             this->center.y - this->radius <= character->center.y + character->radius &&
-            this->center.z + this->radius >= character->center.z - character->radius &&
-            this->center.z - this->radius <= character->center.z + character->radius);
+            this->center.z + this->trunkWidth / 2 >= character->center.z - character->trunkWidth / 2 &&
+            this->center.z - this->trunkWidth / 2 <= character->center.z + character->trunkWidth / 2);
 }
 
 GLfloat Character::get_jump_speed()
@@ -509,9 +504,11 @@ GLfloat Character::get_theta_arm()
 
 void Character::change_theta_body(GLfloat dTheta, GLfloat frameTime)
 {
-    this->gThetaBody = (this->gThetaBody + dTheta*frameTime);
-    if(this->gThetaBody > 360) this->gThetaBody -= 360;
-    if(this->gThetaBody < 0) this->gThetaBody += 360;
+    this->gThetaBody = (this->gThetaBody + dTheta * frameTime);
+    if (this->gThetaBody > 360)
+        this->gThetaBody -= 360;
+    if (this->gThetaBody < 0)
+        this->gThetaBody += 360;
 }
 
 GLfloat Character::get_theta_body()
