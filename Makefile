@@ -50,7 +50,7 @@ exe: ## Run executable with input/arena_teste.svg
 	./$(EXE) input/arena_teste.svg
 
 release: clean ## Compress code in a .zip file for distribution
-	-tar -cvf AtilioAntonioDadalto.zip include/* input/arena_teste.svg obj/ src/* LICENSE main.cpp Makefile README.md
+	-tar -cvf AtilioAntonioDadalto_JoaoFelipeGobetiCalenzani.zip include/* input/arena_teste.svg obj/ src/* LICENSE main.cpp Makefile README.md
 
 help:  ## Display help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
