@@ -103,7 +103,9 @@ void Character::draw_body()
 
     GLfloat trunkHeight = this->height / 8 * 5;
 
-    glScalef(1, this->height / this->trunkWidth, 1);
+    glTranslatef(0, this->height / 8 * 2.5, 0);
+
+    glScalef(1, this->height / this->trunkWidth / 1.5, 1);
     glutSolidCube(this->trunkWidth);
 
     // glBegin(GL_POLYGON);
@@ -257,7 +259,7 @@ void Character::draw_character()
 
     // Head
     glPushMatrix();
-    glTranslatef(this->facingDirection * this->trunkWidth / 1.99, this->height / 10, 0);
+    glTranslatef(this->facingDirection * this->trunkWidth / 1.99, this->height / 3.5, 0);
     glRotatef(90, 0, 1, 0);
     this->draw_head();
     glPopMatrix();
