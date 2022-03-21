@@ -90,6 +90,7 @@ void Character::draw_head()
 void Character::draw_body()
 {
     glColor3f(this->colors.upperBody.r, this->colors.upperBody.g, this->colors.upperBody.b);
+
     GLfloat materialEmission[] = {0.00, 0.00, 0.00, 1.0};
     GLfloat materialColor[] = {1.0, 1.0, 0.0, 1.0};
     GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
@@ -99,6 +100,10 @@ void Character::draw_body()
     glMaterialfv(GL_FRONT, GL_DIFFUSE, materialColor);
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    GLfloat trunkHeight = this->height / 8 * 5;
+
+    glScalef(1, this->height / this->trunkWidth, 1);
     glutSolidCube(this->trunkWidth);
 
     // glBegin(GL_POLYGON);
@@ -280,7 +285,8 @@ void Character::draw_character()
 
     // Head
     glPushMatrix();
-    glTranslatef(0, this->height / 8 * 2, 0);
+    glTranslatef(this->facingDirection * this->trunkWidth / 1.99, this->height / 10, 0);
+    glRotatef(90, 0, 1, 0);
     this->draw_head();
     glPopMatrix();
     glPopMatrix();
