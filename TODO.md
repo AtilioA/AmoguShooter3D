@@ -6,7 +6,7 @@
 - [x] O sistema de colisão será parecido com o do trabalho anterior, porém agora representado por um cilindro da altura do jogador e com raio suficiente para conter tronco do jogador;
 - [x] A arena terá um formato de paralelepípedo e o jogador não poderá sair da arena;
 - [x] As teclas a e d servirão respectivamente para girar o jogador no sentido anti-horário e horário quando visto de cima da arena;
-- [ ] As teclas a e d servirão respectivamente para mover o jogador para frente e para trás (?);
+- [x] As teclas a e d servirão respectivamente para mover o jogador para frente e para trás (?);
 - [x] Pular utilizando a barra de espaço;
 - [x] A bala deve seguir na direção em que a arma estiver apontando no espaço 3D;
 - [ ] O jogo deverá conter pelo menos um modelo de luz na arena (pontual ou direcional);
