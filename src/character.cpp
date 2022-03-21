@@ -133,14 +133,7 @@ void Character::draw_left_thigh()
 
     // glRotatef(this->gThetaLeg, 0, 0, 1);
 
-    glBegin(GL_POLYGON);
-    // clang-format off
-        glVertex2f(0, 0);
-        glVertex2f(this->trunkWidth / 3, 0);
-        glVertex2f(this->trunkWidth / 3, -this->height / 8 * 1.5);
-        glVertex2f(0, -this->height / 8 * 1.5);
-    // clang-format on
-    glEnd();
+    glutSolidCube(this->trunkWidth / 3);
 }
 
 // 4/8 / 2
@@ -160,14 +153,7 @@ void Character::draw_left_leg()
         glRotatef(-30, 0, 0, 1);
     }
 
-    glBegin(GL_POLYGON);
-    // clang-format off
-        glVertex2f(0, 0);
-        glVertex2f(this->trunkWidth / 3, 0);
-        glVertex2f(this->trunkWidth / 3, -this->height / 8 * 1.5);
-        glVertex2f(0, -this->height / 8 * 1.5);
-    // clang-format on
-    glEnd();
+    glutSolidCube(this->trunkWidth / 3);
 }
 
 // 4/8 / 2
@@ -187,14 +173,7 @@ void Character::draw_right_thigh()
 
     // glRotatef(this->gThetaLeg, 0, 0, 1);
 
-    glBegin(GL_POLYGON);
-    // clang-format off
-        glVertex2f(0, 0);
-        glVertex2f(this->trunkWidth / 3, 0);
-        glVertex2f(this->trunkWidth / 3, -this->height / 8 * 1.5);
-        glVertex2f(0, -this->height / 8 * 1.5);
-    // clang-format on
-    glEnd();
+    glutSolidCube(this->trunkWidth / 3);
 }
 
 // 4/8 / 2
@@ -214,14 +193,7 @@ void Character::draw_right_leg()
         glRotatef(30, 0, 0, 1);
     }
 
-    glBegin(GL_POLYGON);
-    // clang-format off
-        glVertex2f(0, 0);
-        glVertex2f(this->trunkWidth / 3, 0);
-        glVertex2f(this->trunkWidth / 3, -this->height / 8 * 1.5);
-        glVertex2f(0, -this->height / 8 * 1.5);
-    // clang-format on
-    glEnd();
+    glutSolidCube(this->trunkWidth / 3);
 }
 
 void Character::draw_arm()
@@ -255,25 +227,25 @@ void Character::draw_character()
     glRotatef(-this->gThetaBody, 0, 1, 0);
     // Left leg
     glPushMatrix();
-    glTranslatef(-this->trunkWidth / 2, -this->radius + this->height / 8 * 1.5, 0);
+    glTranslatef(-this->trunkWidth / 2, -this->radius + this->height / 16, 0);
     this->draw_left_leg();
     glPopMatrix();
 
     // Right leg
     glPushMatrix();
-    glTranslatef(this->trunkWidth / 3 / 2, -this->radius + this->height / 8 * 1.5, 0);
+    glTranslatef(this->trunkWidth / 3 / 2, -this->radius + this->height / 16, 0);
     this->draw_right_leg();
     glPopMatrix();
 
     // Left thigh
     glPushMatrix();
-    glTranslatef(-this->trunkWidth / 2, -this->radius + this->height / 8 * 3, 0);
+    glTranslatef(-this->trunkWidth / 2, -this->radius + this->height / 8 * 2, 0);
     this->draw_left_thigh();
     glPopMatrix();
 
     // Right thigh
     glPushMatrix();
-    glTranslatef(this->trunkWidth / 3 / 2, -this->radius + this->height / 8 * 3, 0);
+    glTranslatef(this->trunkWidth / 3 / 2, -this->radius + this->height / 8 * 2, 0);
     this->draw_right_thigh();
     glPopMatrix();
 
