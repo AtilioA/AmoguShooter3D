@@ -81,7 +81,7 @@ public:
         this->gThetaLeg = 0;
         this->gThetaThigh = 0;
         this->gThetaLegLIMIT = 15;
-        this->gThetaBody = 0;
+        this->gThetaBody = 180;
 
         // Each Character starts facing right and walking in obverse direction
         this->facingDirection = Direction::RIGHT;

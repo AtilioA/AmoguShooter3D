@@ -30,7 +30,7 @@ void parse_circle(XMLElement *circ, Game *game)
     {
         cout << "-- ENEMY --" << endl;
         colors = get_random_enemy_colors();
-        Enemy *enemy = new Enemy(center, r, colors, game->get_n_characters());
+        Enemy *enemy = new Enemy(center, r, colors, game->get_n_characters());        
         game->add_enemy(enemy);
     }
     // Player circle
@@ -40,6 +40,7 @@ void parse_circle(XMLElement *circ, Game *game)
         colors = get_player_colors();
         Player *player = new Player(center, r, colors, game->get_n_characters());
         game->add_player(player);
+        game->get_player()->change_theta_body(-180,1);
     }
 }
 
