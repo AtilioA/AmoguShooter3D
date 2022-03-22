@@ -63,8 +63,8 @@ void Character::draw_head()
 {
     glColor3f(this->visorColor.r, this->visorColor.g, this->visorColor.b);
 
-    if (this->facingDirection == Direction::RIGHT)
-    {
+    // if (this->facingDirection == Direction::RIGHT)
+    // {
         glBegin(GL_POLYGON);
         // clang-format off
             glVertex2f(-this->trunkWidth / 2, 0);
@@ -73,18 +73,18 @@ void Character::draw_head()
             glVertex2f(-this->trunkWidth / 2, this->height / 8);
         // clang-format on
         glEnd();
-    }
-    else
-    {
-        glBegin(GL_POLYGON);
-        // clang-format off
-            glVertex2f(-this->trunkWidth / 1.75, 0);
-            glVertex2f(this->trunkWidth / 2, 0);
-            glVertex2f(this->trunkWidth / 2, this->height / 8);
-            glVertex2f(-this->trunkWidth / 1.75, this->height / 8);
-        // clang-format on
-        glEnd();
-    }
+    // }
+    // else
+    // {
+    //     glBegin(GL_POLYGON);
+    //     // clang-format off
+    //         glVertex2f(-this->trunkWidth / 1.75, 0);
+    //         glVertex2f(this->trunkWidth / 2, 0);
+    //         glVertex2f(this->trunkWidth / 2, this->height / 8);
+    //         glVertex2f(-this->trunkWidth / 1.75, this->height / 8);
+    //     // clang-format on
+    //     glEnd();
+    // }
 }
 
 void Character::draw_body()
@@ -200,12 +200,13 @@ void Character::draw_arm()
 {
     glColor3f(this->colors.lowerBody.r * 0.5, this->colors.lowerBody.g * 0.5, this->colors.lowerBody.b * 0.5);
 
-    glTranslatef(this->center.x, -this->center.y, -this->center.z);
+    glTranslatef(this->center.x - (this->trunkWidth / 2 * 1.1)*sin(game->get_player()->get_theta_body()/180*M_PI), -this->center.y, -this->center.z + (this->trunkWidth / 2 * 1.1)*cos(game->get_player()->get_theta_body()/180*M_PI));
 
     // Rotate with gThetaArm
     glRotatef(this->gThetaArm, 0, 0, 1);
     // Flip with facingDirection according to the direction of the character
-    glRotatef(90 * this->facingDirection, 0, 0, 1);
+    glRotatef(-this->gThetaBody, 0, 1, 0);
+    glRotatef(90, 0, 0, 1);
 
     glScalef(1, -this->height / 8 * 2.5, 1);
     glutSolidCube(this->trunkWidth / 3);
@@ -260,7 +261,7 @@ void Character::draw_character()
 
     // Head
     glPushMatrix();
-    glTranslatef(this->facingDirection * this->trunkWidth / 1.99, this->height / 3.5, 0);
+    glTranslatef(this->trunkWidth / 1.99, this->height / 3.5, 0);
     glRotatef(90, 0, 1, 0);
     this->draw_head();
     glPopMatrix();
@@ -305,7 +306,7 @@ void Character::draw_character()
 
     // Arm
     glPushMatrix();
-    glTranslatef(0, 0, this->trunkWidth / 2 * 1.1);
+    // glTranslatef(0, 0, this->trunkWidth / 2 * 1.1);
     this->draw_arm();
     glPopMatrix();
 }
