@@ -114,9 +114,9 @@ void updateCamera()
     {
     // first person
     case 1:
-        eyex = game->get_player()->get_center().x;
+        eyex = game->get_player()->get_center().x + game->get_player()->get_radius()*cos(game->get_player()->get_theta_body()/180*M_PI);
         eyey = -game->get_player()->get_center().y + game->get_player()->get_trunk_width() / 2.0;
-        eyez = -game->get_player()->get_center().z;
+        eyez = -game->get_player()->get_center().z + game->get_player()->get_radius()*sin(game->get_player()->get_theta_body()/180*M_PI);
         posx = eyex + game->get_player()->get_radius()*cos(game->get_player()->get_theta_body()/180*M_PI);
         posy = eyey;
         posz = eyez + game->get_player()->get_radius()*sin(game->get_player()->get_theta_body()/180*M_PI);
