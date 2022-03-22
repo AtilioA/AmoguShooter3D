@@ -200,7 +200,7 @@ void Character::draw_arm()
 {
     glColor3f(this->colors.lowerBody.r * 0.5, this->colors.lowerBody.g * 0.5, this->colors.lowerBody.b * 0.5);
 
-    glTranslatef(this->center.x - (this->trunkWidth / 2 * 1.1)*sin(game->get_player()->get_theta_body()/180*M_PI), -this->center.y, -this->center.z + (this->trunkWidth / 2 * 1.1)*cos(game->get_player()->get_theta_body()/180*M_PI));
+    glTranslatef(this->center.x - (this->trunkWidth / 2 * 1.1)*sin(game->get_player()->get_theta_body()/180*M_PI), -this->center.y, -this->center.z + (this->trunkWidth / 2 * 1.5)*cos(game->get_player()->get_theta_body()/180*M_PI));
 
     // Rotate with gThetaArm
     glRotatef(this->gThetaArm, 0, 0, 1);
