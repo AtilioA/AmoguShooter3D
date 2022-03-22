@@ -101,8 +101,6 @@ void Character::draw_body()
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
-    GLfloat trunkHeight = this->height / 8 * 5;
-
     glTranslatef(0, this->height / 8 * 2.5, 0);
 
     glScalef(1, this->height / this->trunkWidth / 1.5, 1);
@@ -209,14 +207,17 @@ void Character::draw_arm()
     // Flip with facingDirection according to the direction of the character
     glRotatef(90 * this->facingDirection, 0, 0, 1);
 
-    glBegin(GL_POLYGON);
-    // clang-format off
-        glVertex2f(- this->trunkWidth / 8, 0);
-        glVertex2f( this->trunkWidth / 8, 0);
-        glVertex2f(this->trunkWidth / 8, -this->height / 8 * 2.5);
-        glVertex2f(-this->trunkWidth / 8, -this->height / 8 * 2.5);
-    // clang-format on
-    glEnd();
+    glScalef(1, -this->height / 8 * 2.5, 1);
+    glutSolidCube(this->trunkWidth / 3);
+
+    // glBegin(GL_POLYGON);
+    // // clang-format off
+    //     glVertex2f(- this->trunkWidth / 8, 0);
+    //     glVertex2f( this->trunkWidth / 8, 0);
+    //     glVertex2f(this->trunkWidth / 8, -this->height / 8 * 2.5);
+    //     glVertex2f(-this->trunkWidth / 8, -this->height / 8 * 2.5);
+    // // clang-format on
+    // glEnd();
 }
 
 // Draw a character
@@ -263,6 +264,7 @@ void Character::draw_character()
     glRotatef(90, 0, 1, 0);
     this->draw_head();
     glPopMatrix();
+
     glPopMatrix();
 
     // Visual debug options
@@ -303,6 +305,7 @@ void Character::draw_character()
 
     // Arm
     glPushMatrix();
+    glTranslatef(0, 0, this->trunkWidth / 2 * 1.1);
     this->draw_arm();
     glPopMatrix();
 }
