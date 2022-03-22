@@ -22,7 +22,7 @@ void Game::make_a_character_shoot(Character *character)
     // Check if Character can shoot (based on their reload time and the time since the last shot)
     if (glutGet(GLUT_ELAPSED_TIME) - character->get_last_time_fired() >= character->get_reload_time())
     {
-        Gunshot *newGunshot = new Gunshot(character->get_id(), character->get_center().x, character->get_center().y, character->get_center().z, character->get_speed(), character->get_radius(), character->get_theta_arm() + (90 * character->get_facing_direction()), character->get_theta_body(), character->get_facing_direction(), character->get_crewmate_colors().upperBody);
+        Gunshot *newGunshot = new Gunshot(character->get_id(), character->get_center().x, character->get_center().y, character->get_center().z - character->get_trunk_width() / 2 * 1.1, character->get_speed(), character->get_radius(), character->get_theta_arm() + (90 * character->get_facing_direction()), character->get_theta_body(), character->get_facing_direction(), character->get_crewmate_colors().upperBody);
 
         this->charactersGunshots.push_back(newGunshot);
 
